@@ -1,0 +1,75 @@
+[gd_scene load_steps=11 format=3 uid="uid://se76ob546rjr"]
+
+[ext_resource type="Texture2D" uid="uid://d2vy0onw1egf0" path="res://assets/Decorations/Trees/Tree2.png" id="1_087k8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ipky0"]
+atlas = ExtResource("1_087k8")
+region = Rect2(0, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_re4u3"]
+atlas = ExtResource("1_087k8")
+region = Rect2(192, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6viw8"]
+atlas = ExtResource("1_087k8")
+region = Rect2(384, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r01is"]
+atlas = ExtResource("1_087k8")
+region = Rect2(576, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yoj8e"]
+atlas = ExtResource("1_087k8")
+region = Rect2(768, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_colx7"]
+atlas = ExtResource("1_087k8")
+region = Rect2(960, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_725ce"]
+atlas = ExtResource("1_087k8")
+region = Rect2(1152, 0, 192, 256)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l4c1y"]
+atlas = ExtResource("1_087k8")
+region = Rect2(1344, 0, 192, 256)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_3xa4o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ipky0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_re4u3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6viw8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r01is")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yoj8e")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_colx7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_725ce")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l4c1y")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="tree1" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -80)
+sprite_frames = SubResource("SpriteFrames_3xa4o")
+autoplay = "default"
+frame_progress = 0.126176

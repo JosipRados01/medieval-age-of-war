@@ -1,0 +1,74 @@
+[gd_scene load_steps=11 format=3 uid="uid://csidsduuujnbj"]
+
+[ext_resource type="Texture2D" uid="uid://c7bwsocneyp2s" path="res://assets/Decorations/Bushes/Bushe1.png" id="1_5vuy8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tedh1"]
+atlas = ExtResource("1_5vuy8")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1snq6"]
+atlas = ExtResource("1_5vuy8")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3oq1p"]
+atlas = ExtResource("1_5vuy8")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iecim"]
+atlas = ExtResource("1_5vuy8")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ofw4"]
+atlas = ExtResource("1_5vuy8")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ogmv"]
+atlas = ExtResource("1_5vuy8")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6itbu"]
+atlas = ExtResource("1_5vuy8")
+region = Rect2(768, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xnt7g"]
+atlas = ExtResource("1_5vuy8")
+region = Rect2(896, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xktos"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tedh1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1snq6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3oq1p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iecim")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0ofw4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0ogmv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6itbu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xnt7g")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 20)
+sprite_frames = SubResource("SpriteFrames_xktos")
+autoplay = "default"

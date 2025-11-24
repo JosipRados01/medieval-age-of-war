@@ -1,0 +1,75 @@
+[gd_scene load_steps=11 format=3 uid="uid://cyppc8llg1rc8"]
+
+[ext_resource type="Texture2D" uid="uid://cw34mmodwu1sp" path="res://assets/Decorations/Trees/Tree3.png" id="1_q3tk5"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jfyg3"]
+atlas = ExtResource("1_q3tk5")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x4ym8"]
+atlas = ExtResource("1_q3tk5")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oruh3"]
+atlas = ExtResource("1_q3tk5")
+region = Rect2(768, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0pb51"]
+atlas = ExtResource("1_q3tk5")
+region = Rect2(960, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b44pc"]
+atlas = ExtResource("1_q3tk5")
+region = Rect2(1152, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kwrhg"]
+atlas = ExtResource("1_q3tk5")
+region = Rect2(1344, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j6d8m"]
+atlas = ExtResource("1_q3tk5")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y1qp0"]
+atlas = ExtResource("1_q3tk5")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_efxt3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jfyg3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x4ym8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oruh3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0pb51")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b44pc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kwrhg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j6d8m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y1qp0")
+}],
+"loop": true,
+"name": &"default",
+"speed": 7.0
+}]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -38)
+sprite_frames = SubResource("SpriteFrames_efxt3")
+autoplay = "default"
+frame_progress = 0.669984
