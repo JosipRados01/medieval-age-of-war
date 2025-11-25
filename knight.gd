@@ -37,6 +37,9 @@ var reposition_interval = 100  # frames
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	#spawn on the correct position on the path
+	if(team == "enemy"):
+		progress_on_path_precentage = 0.99
+	
 	point_on_path.progress_ratio = progress_on_path_precentage
 	position = point_on_path.position
 	
@@ -63,7 +66,6 @@ func _process(delta: float) -> void:
 				start_attack_animation()
 			else:
 				#reposition according to enemy. Ideal position for knight is in front of the enemy and in range for attack
-				animated_sprite.play("move")
 				reposition(delta)
 	else:
 		#continue following the path
@@ -181,7 +183,6 @@ func _update_offset(delta):
 func update_attack_timer():
 	if(can_attack):
 		return
-	print(can_attack_again_timer)
 	can_attack_again_timer -= 1
 	if(can_attack_again_timer <= 0):
 		can_attack = true
@@ -190,7 +191,9 @@ func end_attack():
 	is_attacking = false
 	can_attack = false
 	can_attack_again_timer = attack_cooldown_frames
+	# reset the animations
 	attack_animation_played = ""
+	animated_sprite.play("move")
 	# make sure repositioning selects a new target on the next frame
 	reposition_timer = reposition_interval-1
 
@@ -224,11 +227,10 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 
 
 func _on_animated_sprite_2d_frame_changed() -> void:
-	if(attack_animation_played == "attack_1" or attack_animation_played == "attack_2"):
-		if (animated_sprite.frame == 2):
-			hurtbox.disabled = false
-		else:
-			hurtbox.disabled = true
+	if animated_sprite.animation == "attack_1" or animated_sprite.animation == "attack_2":
+		hurtbox.disabled = animated_sprite.frame != 2
+	else:
+		hurtbox.disabled = true
 
 
 func _on_hurtbox_area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int) -> void:
