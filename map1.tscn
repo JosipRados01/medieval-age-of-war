@@ -280,9 +280,6 @@ rotation = 0.143782
 [node name="Node2D" type="Node2D" parent="."]
 y_sort_enabled = true
 
-[node name="Knight" parent="Node2D" instance=ExtResource("31_gq3xk")]
-position = Vector2(119, 295)
-
 [node name="Knight2" parent="Node2D" instance=ExtResource("31_gq3xk")]
 position = Vector2(203, 333)
 progress_on_path_precentage = 0.01

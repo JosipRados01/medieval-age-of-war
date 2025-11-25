@@ -1,8 +1,8 @@
 extends Node2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var hitbox: Area2D = $Hitbox
-@onready var hurtbox: Area2D = $Hurtbox
+@onready var hitbox: CollisionShape2D = $Hitbox/CollisionShape2D
+@onready var hurtbox: CollisionShape2D = $Hurtbox/CollisionShape2D
 @onready var enemyDetector: Area2D = $EnemyDetector
 @onready var enemy_in_range: Area2D = $Enemy_in_range
 @onready var point_on_path : PathFollow2D = $"../../Path/point_on_path"
@@ -31,7 +31,7 @@ var target_offset := 0.0
 # reposition variables
 var current_target_position = null
 var reposition_timer = 0
-var reposition_interval = 200  # frames
+var reposition_interval = 100  # frames
 
 
 # Called when the node enters the scene tree for the first time.
@@ -55,7 +55,6 @@ func _process(delta: float) -> void:
 	if(is_combat_mode):
 		# if attacking do nothing
 		if(is_attacking):
-			# check if the animation should turn on the hitbox or off
 			pass
 		else:
 			#check for nearby enemies and if an enemy is close enough attack
@@ -126,11 +125,11 @@ func reposition(delta):
 		var targetPosition = chosen_enemy.position
 		var reposition_distance_x = 80 
 		if not can_attack:
-			reposition_distance_x = randi() % (200 - 50 + 1) + 51
+			reposition_distance_x = randi() % (150 - 30 + 1) + 31
 		
 		var reposition_distance_y = 0 
 		if not can_attack:
-			var y = randi() % (100 - 50 + 1) + 51  # 51..200
+			var y = randi() % (100 - 30 + 1) + 31  # 51..200
 			if randi() % 2 == 0:
 				y = -y  # randomly flip to negative side
 			reposition_distance_y = y
@@ -204,6 +203,15 @@ func check_second_swing():
 	else:
 		end_attack()
 
+func take_damage(damage:int):
+	health -= damage
+	
+	if(health <= 0):
+		die()
+
+
+func die():
+	queue_free()
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if(attack_animation_played == "attack_1"):
@@ -213,4 +221,21 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 			end_attack()
 		else:
 			end_attack()
-	
+
+
+func _on_animated_sprite_2d_frame_changed() -> void:
+	if(attack_animation_played == "attack_1" or attack_animation_played == "attack_2"):
+		if (animated_sprite.frame == 2):
+			hurtbox.disabled = false
+		else:
+			hurtbox.disabled = true
+
+
+func _on_hurtbox_area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int) -> void:
+	# check if the area that entered is a hitbox
+	if area.name == "Hitbox":
+		var parent = area.get_parent()
+		if(parent.has_method("_get_team")):
+			var target_team = parent._get_team()
+			if(target_team != team and parent.has_method("take_damage")):
+				parent.take_damage(damage)
