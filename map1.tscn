@@ -290,7 +290,7 @@ progress_on_path_precentage = 0.01
 [node name="Knight3" parent="Node2D" instance=ExtResource("31_gq3xk")]
 position = Vector2(323, 413)
 team = "enemy"
-progress_on_path_precentage = 0.08
+progress_on_path_precentage = 0.09
 
 [node name="Decorations" type="TileMapLayer" parent="Node2D"]
 y_sort_enabled = true

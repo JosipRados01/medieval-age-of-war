@@ -79,7 +79,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_7woc6")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_1",
 "speed": 8.0
 }, {
@@ -96,7 +96,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_2yhar")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack_2",
 "speed": 8.0
 }, {
@@ -150,8 +150,7 @@ debug_color = Color(0, 0.647416, 0.21166, 0.42)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -1)
 sprite_frames = SubResource("SpriteFrames_0k4cw")
-animation = &"move"
-frame_progress = 0.95072
+animation = &"attack_2"
 
 [node name="Hitbox" type="Area2D" parent="."]
 collision_layer = 2
@@ -186,3 +185,5 @@ collision_layer = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy_in_range"]
 position = Vector2(55, 2)
 shape = SubResource("CapsuleShape2D_np0bx")
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
