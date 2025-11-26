@@ -10,7 +10,7 @@ var player_points = 1000
 var spawn_timer = 0
 var spawn_interval = 60
 var wave_spawn_timer = 0
-var wave_spawn_interval = 600
+var wave_spawn_interval = 1200
 
 const KNIGHT = preload("res://knight.tscn")
 
@@ -40,6 +40,9 @@ func _process(delta: float) -> void:
 	if (Input.is_action_just_pressed("spawn_knight") and player_points >= units_cost.knight):
 		player_points -= units_cost.knight
 		player_spawn_queue.append(units_enum.knight)
+		
+		Singleton.update_icons(player_spawn_queue)
+		Singleton.update_points()
 	
 	# Check if the enemy should summon their wave
 	wave_spawn_timer += 1
@@ -55,6 +58,10 @@ func _process(delta: float) -> void:
 
 		current_player_wave.append_array(player_spawn_queue.duplicate())
 		player_spawn_queue.clear()
+		
+		Singleton.update_icons(player_spawn_queue)
+	
+	Singleton.update_wave_timer(wave_spawn_interval - (wave_spawn_timer % wave_spawn_interval))
 	
 	# if there's anything in the queues summon every 60 frames
 	spawn_timer += 1
