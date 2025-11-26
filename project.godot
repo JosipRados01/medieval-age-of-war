@@ -15,6 +15,10 @@ run/main_scene="uid://sdjghkpol7d1"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Singleton="*res://singleton.gd"
+
 [display]
 
 window/size/mode=2

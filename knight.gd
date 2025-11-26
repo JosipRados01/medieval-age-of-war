@@ -1,11 +1,12 @@
 extends Node2D
 
-@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+var animated_sprite: AnimatedSprite2D
 @onready var hitbox: CollisionShape2D = $Hitbox/CollisionShape2D
 @onready var hurtbox: CollisionShape2D = $Hurtbox/CollisionShape2D
 @onready var enemyDetector: Area2D = $EnemyDetector
 @onready var enemy_in_range: Area2D = $Enemy_in_range
 @onready var point_on_path : PathFollow2D = $"../../Path/point_on_path"
+@onready var death_particles: CPUParticles2D = $DeathParticles
 
 var health := 100
 var damage := 30
@@ -13,6 +14,8 @@ var can_attack_again_timer
 var movement_speed := 100
 # "player" | "enemy"
 @export var team := "player"
+# how many points the unit is worth on death
+var points = 40
 
 var is_combat_mode: bool = false
 var is_attacking: bool = false
@@ -36,9 +39,14 @@ var reposition_interval = 100  # frames
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#spawn on the correct position on the path
+	#spawn on the correct position on the path and connect animated sprites
 	if(team == "enemy"):
 		progress_on_path_precentage = 0.99
+		animated_sprite = $EnemyAnimatedSprite2D
+		$AnimatedSprite2D.visible = false
+	else:
+		animated_sprite = $AnimatedSprite2D
+		$EnemyAnimatedSprite2D.visible = false
 	
 	point_on_path.progress_ratio = progress_on_path_precentage
 	position = point_on_path.position
@@ -214,7 +222,14 @@ func take_damage(damage:int):
 
 
 func die():
+	Singleton.add_points(team, points)
+	death_particles.reparent(get_parent())
+	death_particles.emitting = true
+	death_particles.connect("finished", Callable(self, "_on_death_particles_finished"))
 	queue_free()
+
+func _on_death_particles_finished():
+	death_particles.queue_free()
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if(attack_animation_played == "attack_1"):
