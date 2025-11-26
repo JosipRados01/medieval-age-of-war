@@ -39,21 +39,20 @@ var reposition_interval = 100  # frames
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	#spawn on the correct position on the path and connect animated sprites
-	if(team == "enemy"):
+	if team == "enemy":
 		progress_on_path_precentage = 0.99
 		animated_sprite = $EnemyAnimatedSprite2D
-		$AnimatedSprite2D.visible = false
+		$AnimatedSprite2D.queue_free()
 	else:
 		animated_sprite = $AnimatedSprite2D
-		$EnemyAnimatedSprite2D.visible = false
-	
+		$EnemyAnimatedSprite2D.queue_free()
+
 	point_on_path.progress_ratio = progress_on_path_precentage
 	position = point_on_path.position
-	
-	# flip the scene if this is an enemy unit
-	if(team == "enemy"):
+
+	if team == "enemy":
 		scale.x = -1
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -76,6 +75,10 @@ func _process(delta: float) -> void:
 				#reposition according to enemy. Ideal position for knight is in front of the enemy and in range for attack
 				reposition(delta)
 	else:
+		# reset the variables to make sure that we don't get stuck
+		is_attacking = false
+		attack_animation_played = ""
+		current_target_position = null
 		#continue following the path
 		move_on_path(delta)
 

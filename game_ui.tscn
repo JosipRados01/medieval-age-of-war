@@ -37,29 +37,31 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Points" type="Control" parent="Control/MarginContainer/Hbox/Vbox_left"]
-custom_minimum_size = Vector2(339, 129)
+custom_minimum_size = Vector2(339, 240)
 layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Control/MarginContainer/Hbox/Vbox_left/Points"]
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+scale = Vector2(2, 2)
 texture = ExtResource("1_3cv1o")
 
 [node name="PointLabel" type="Label" parent="Control/MarginContainer/Hbox/Vbox_left/Points"]
 layout_mode = 0
-offset_left = 30.0
-offset_top = 21.0
-offset_right = 296.0
-offset_bottom = 78.0
+offset_left = 63.0
+offset_top = 46.0
+offset_right = 341.0
+offset_bottom = 159.0
 theme_override_fonts/font = ExtResource("2_2ykv4")
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 100
 text = "1000 g"
 
 [node name="icons" type="HBoxContainer" parent="Control/MarginContainer/Hbox/Vbox_left"]
 layout_mode = 2
 
 [node name="Vbox_right" type="VBoxContainer" parent="Control/MarginContainer/Hbox"]
+custom_minimum_size = Vector2(650, 0)
 layout_mode = 2
 
 [node name="Wave_timer" type="Control" parent="Control/MarginContainer/Hbox/Vbox_right"]
@@ -70,6 +72,7 @@ layout_mode = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
+scale = Vector2(2, 2)
 texture = ExtResource("1_3cv1o")
 
 [node name="Wave_timer_label" type="Label" parent="Control/MarginContainer/Hbox/Vbox_right/Wave_timer"]
@@ -79,5 +82,5 @@ offset_top = 21.0
 offset_right = 296.0
 offset_bottom = 78.0
 theme_override_fonts/font = ExtResource("2_2ykv4")
-theme_override_font_sizes/font_size = 50
+theme_override_font_sizes/font_size = 100
 text = "00:10"

@@ -200,7 +200,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_1",
-"speed": 10.0
+"speed": 9.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -217,7 +217,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_2",
-"speed": 10.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -269,11 +269,11 @@ debug_color = Color(0, 0.647416, 0.21166, 0.42)
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -1)
 sprite_frames = SubResource("SpriteFrames_0k4cw")
-animation = &"move"
+animation = &"attack_1"
 
 [node name="EnemyAnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_mjdl3")
-animation = &"attack_1"
+animation = &"attack_2"
 
 [node name="Hitbox" type="Area2D" parent="."]
 collision_layer = 2
