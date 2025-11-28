@@ -29,7 +29,7 @@
 [ext_resource type="Texture2D" uid="uid://c3eagwxl6jtbu" path="res://assets/Buildings/Blue Buildings/Monastery.png" id="20_yyvg5"]
 [ext_resource type="Texture2D" uid="uid://bbq43diuipe6r" path="res://assets/Buildings/Blue Buildings/Tower.png" id="21_6p0w6"]
 [ext_resource type="Texture2D" uid="uid://dm2vdxjmpw8ay" path="res://assets/Buildings/Red Buildings/Monastery.png" id="21_u3gpx"]
-[ext_resource type="PackedScene" uid="uid://crtftgnixw88m" path="res://archer.tscn" id="22_joa1j"]
+[ext_resource type="PackedScene" uid="uid://cep7q7cyxt51r" path="res://spearman.tscn" id="23_u3gpx"]
 [ext_resource type="Texture2D" uid="uid://bqej0e74g3mk7" path="res://assets/Buildings/Red Buildings/Archery.png" id="28_kyf65"]
 [ext_resource type="Texture2D" uid="uid://dnbb70gvsak7j" path="res://assets/Buildings/Red Buildings/Barracks.png" id="29_qsu6d"]
 [ext_resource type="PackedScene" uid="uid://dnq1mw7v4pkg7" path="res://knight.tscn" id="31_gq3xk"]
@@ -293,8 +293,8 @@ position = Vector2(323, 413)
 team = "enemy"
 progress_on_path_precentage = 0.2
 
-[node name="Archer" parent="PlayLayer" instance=ExtResource("22_joa1j")]
-position = Vector2(664, 526)
+[node name="Spearman" parent="PlayLayer" instance=ExtResource("23_u3gpx")]
+position = Vector2(831, 584)
 progress_on_path_precentage = 0.6
 
 [node name="Decorations" type="TileMapLayer" parent="PlayLayer"]

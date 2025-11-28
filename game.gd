@@ -5,15 +5,16 @@ var enemy_spawn_queue = []
 var current_enemy_wave = []
 var player_spawn_queue = []
 var current_player_wave = []
-var enemy_points = 1000
-var player_points = 1000
+var enemy_points = 200
+var player_points = 200
 var spawn_timer = 0
 var spawn_interval = 60
 var wave_spawn_timer = 0
-var wave_spawn_interval = 1200
+var wave_spawn_interval = 100 # increase before release
 
 const KNIGHT = preload("res://knight.tscn")
 const ARCHER = preload("res://archer.tscn")
+const SPEARMAN = preload("res://spearman.tscn")
 
 const units_enum = {
 	"knight": "knight",
@@ -46,7 +47,11 @@ func _process(delta: float) -> void:
 		player_points -= units_cost.archer
 		player_spawn_queue.append(units_enum.archer)
 	
-	if Input.is_action_just_pressed("spawn_archer") or Input.is_action_just_pressed("spawn_knight"):
+	if (Input.is_action_just_pressed("spawn_spearman") and player_points >= units_cost.spearman):
+		player_points -= units_cost.spearman
+		player_spawn_queue.append(units_enum.spearman)
+	
+	if Input.is_action_just_pressed("spawn_archer") or Input.is_action_just_pressed("spawn_knight") or Input.is_action_just_pressed("spawn_spearman"):
 		Singleton.update_icons(player_spawn_queue)
 		Singleton.update_points()
 	
@@ -54,8 +59,12 @@ func _process(delta: float) -> void:
 	wave_spawn_timer += 1
 	if(wave_spawn_timer % wave_spawn_interval == 0):
 		while enemy_points >= units_cost.knight:
-			enemy_points -= units_cost.knight
-			enemy_spawn_queue.append(units_enum.knight)
+			var selected_unit = [units_enum.knight, units_enum.archer, units_enum.spearman].pick_random()
+			if enemy_points < units_cost[selected_unit]:
+				selected_unit = units_enum.knight
+			
+			enemy_points -= units_cost[selected_unit]
+			enemy_spawn_queue.append(selected_unit)
 	
 	if(wave_spawn_timer % wave_spawn_interval == 0):
 		# empty both arrays and move them to the next wave
@@ -90,7 +99,7 @@ func spawnUnit(team):
 		unit_instance = KNIGHT.instantiate()
 	elif unit_type == units_enum.archer:
 		unit_instance = ARCHER.instantiate()
-	#elif unit_type == units_enum.spearman:
-		#unit_instance = SPEARMAN.instantiate()
+	elif unit_type == units_enum.spearman:
+		unit_instance = SPEARMAN.instantiate()
 	unit_instance.team = team
 	play_layer.add_child(unit_instance)

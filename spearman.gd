@@ -2,26 +2,29 @@ extends Node2D
 
 var animated_sprite: AnimatedSprite2D
 @onready var hitbox: CollisionShape2D = $Hitbox/CollisionShape2D
-@onready var hurtbox: CollisionShape2D = $Hurtbox/CollisionShape2D
+@onready var hurtbox_side: CollisionShape2D = $Hurtbox_side/CollisionShape2D
+@onready var hurtbox_up_side: CollisionShape2D = $Hurtbox_up_side/CollisionShape2D
+@onready var hurtbox_down_side: CollisionShape2D = $Hurtbox_down_side/CollisionShape2D
 @onready var enemyDetector: Area2D = $EnemyDetector
-@onready var enemy_in_range: Area2D = $Enemy_in_range
+@onready var enemy_in_range_side: Area2D = $Enemy_in_range_side
+@onready var enemy_in_range_up_side: Area2D = $Enemy_in_range_up_side
+@onready var enemy_in_range_down_side: Area2D = $Enemy_in_range_down_side
 @onready var point_on_path : PathFollow2D = $"../../Path/point_on_path"
 @onready var death_particles: CPUParticles2D = $DeathParticles
 
-@export var health := 160
+@export var health := 100
 var damage := 30
 var can_attack_again_timer
-var movement_speed := 100
+var movement_speed := 150
 # "player" | "enemy"
 @export var team := "player"
 # how many points the unit is worth on death
-var points = 40
+var points = 50
 
 var is_combat_mode: bool = false
 var is_attacking: bool = false
 var can_attack: bool = true
-var attack_animation_played = ""
-var attack_cooldown_frames = 500
+var attack_cooldown_frames = 10
 
 @export var progress_on_path_precentage:float 
 var progress_on_path_pixels := 0.0
@@ -31,11 +34,8 @@ var side_offset := 0.0
 var target_offset := 0.0
 @onready var offset_change_time := 0.0
 
-# reposition variables
-var current_target_position = null
-var reposition_timer = 0
-var reposition_interval = 100  # frames
-
+# repositioning preference for spearman
+var repositioning_preference := "side"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -52,6 +52,9 @@ func _ready() -> void:
 
 	if team == "enemy":
 		scale.x = -1
+	
+	# choose a random preference for attack side
+	repositioning_preference = ["side", "down", "up"].pick_random()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -75,10 +78,9 @@ func _process(delta: float) -> void:
 				#reposition according to enemy. Ideal position for knight is in front of the enemy and in range for attack
 				reposition(delta)
 	else:
+		#TODO: add a check for is attacking and skip the moving if so
 		# reset the variables to make sure that we don't get stuck
 		is_attacking = false
-		attack_animation_played = ""
-		current_target_position = null
 		#continue following the path
 		move_on_path(delta)
 
@@ -101,7 +103,9 @@ func check_combat_mode() -> bool:
 
 func should_unit_attack() -> bool:
 	# the unit should attack if the Enemy_in_range area has enemies in the enemy team
-	var overlaping = enemy_in_range.get_overlapping_bodies()
+	var overlaping = enemy_in_range_side.get_overlapping_bodies()
+	overlaping.append_array(enemy_in_range_up_side.get_overlapping_bodies())
+	overlaping.append_array(enemy_in_range_down_side.get_overlapping_bodies())
 	for enemy in overlaping:
 		if (enemy.has_method("_get_team")):
 			var enemy_team = enemy._get_team()
@@ -112,14 +116,24 @@ func should_unit_attack() -> bool:
 func _get_team():
 	return team
 
+func are_enemies_in_array(array):
+	for enemy in array:
+		if (enemy.has_method("_get_team")):
+			var enemy_team = enemy._get_team()
+			if team != enemy_team:
+				return true
+	return false
+
 func start_attack_animation():
 	is_attacking = true
-	attack_animation_played = "attack_1"
-	animated_sprite.play("attack_1")
+	if(are_enemies_in_array(enemy_in_range_side.get_overlapping_bodies())):
+		animated_sprite.play("attack_side")
+	elif(are_enemies_in_array(enemy_in_range_up_side.get_overlapping_bodies())):
+		animated_sprite.play("attack_up_side")
+	else:
+		animated_sprite.play("attack_down_side")
 	
 func reposition(delta):
-	reposition_timer += 1
-	# if can attack - move in, if can't move away
 	if(can_attack):
 		# check if an enemy is already in range using should_unit_attack
 		var enemy_in_range = should_unit_attack()
@@ -133,30 +147,25 @@ func reposition(delta):
 	# for now just get the first one, but this should be the closest enemy
 	var chosen_enemy = overlaping_enemies[0]
 	
-	if ((reposition_timer % reposition_interval == 0) or current_target_position == null):
-		# if not find a point in front of the enemy to move towards
-		var targetPosition = chosen_enemy.position
-		var reposition_distance_x = 80 
-		if not can_attack:
-			reposition_distance_x = randi() % (150 - 30 + 1) + 31
-		
-		var reposition_distance_y = 0 
-		if not can_attack:
-			var y = randi() % (100 - 30 + 1) + 31  # 51..200
-			if randi() % 2 == 0:
-				y = -y  # randomly flip to negative side
-			reposition_distance_y = y
-		
-		if(team == "player"):
-			targetPosition.x -= reposition_distance_x
-			targetPosition.y -= reposition_distance_y
-		else:
-			targetPosition.x += reposition_distance_x
-			targetPosition.y += reposition_distance_y
-		current_target_position = targetPosition
-			
+	
+	# if not find a point in front of the enemy to move towards
+	var targetPosition = chosen_enemy.position
+	var reposition_distance_x = 70 
+	var reposition_distance_y = 0
+	
+	if repositioning_preference == "up":
+		reposition_distance_y = 40
+	elif repositioning_preference == "down":
+		reposition_distance_y = -40
+
+	if(team == "player"):
+		targetPosition.x -= reposition_distance_x
+		targetPosition.y -= reposition_distance_y
+	else:
+		targetPosition.x += reposition_distance_x
+		targetPosition.y += reposition_distance_y
 	# move to the point
-	position = position.move_toward(current_target_position, movement_speed * delta)
+	position = position.move_toward(targetPosition, movement_speed * delta)
 
 func move_on_path(delta):
 	#get and update the point
@@ -202,20 +211,8 @@ func end_attack():
 	is_attacking = false
 	can_attack = false
 	can_attack_again_timer = attack_cooldown_frames
-	# reset the animations
-	attack_animation_played = ""
 	animated_sprite.play("move")
-	# make sure repositioning selects a new target on the next frame
-	reposition_timer = reposition_interval-1
 
-# check if the enemy is still in range and init a second swing if so
-func check_second_swing():
-	#if an enemy is still in range play the second swing, if not just end the attack
-	if(should_unit_attack()):
-		attack_animation_played = "attack_2"
-		animated_sprite.play("attack_2")
-	else:
-		end_attack()
 
 func take_damage(damage:int):
 	health -= damage
@@ -235,20 +232,21 @@ func _on_death_particles_finished():
 	death_particles.queue_free()
 
 func _on_animated_sprite_2d_animation_finished() -> void:
-	if(attack_animation_played == "attack_1"):
-		check_second_swing()
-	else: 
-		if (attack_animation_played == "attack_2"):
-			end_attack()
-		else:
-			end_attack()
+	if(is_attacking):
+		end_attack()
 
 
 func _on_animated_sprite_2d_frame_changed() -> void:
-	if animated_sprite.animation == "attack_1" or animated_sprite.animation == "attack_2":
-		hurtbox.disabled = animated_sprite.frame != 2
+	if animated_sprite.animation == "attack_side" :
+		hurtbox_side.disabled = animated_sprite.frame != 1
+	elif animated_sprite.animation == "attack_up_side" :
+		hurtbox_up_side.disabled = animated_sprite.frame != 1
+	elif animated_sprite.animation == "attack_down_side":
+		hurtbox_down_side.disabled = animated_sprite.frame != 1
 	else:
-		hurtbox.disabled = true
+		hurtbox_side.disabled = true
+		hurtbox_up_side.disabled = true
+		hurtbox_down_side.disabled = true
 
 
 func _on_hurtbox_area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int) -> void:

@@ -14,7 +14,7 @@ var movement_speed := 100
 # "player" | "enemy"
 @export var team := "player"
 # how many points the unit is worth on death
-var points = 50
+var points = 60
 
 var is_combat_mode: bool = false
 var is_attacking: bool = false
@@ -198,13 +198,15 @@ func shoot_arrow():
 	# calculate initial velocity for arrow
 	var start = global_position
 	var end = target_enemy.global_position
-	#
-	#var m = ColorRect.new()
-	#m.position = Vector2(end)     # where you want it
-	#m.size = Vector2(10, 10)      # 10x10
-	#m.color = Color.WHITE         # white
-	#get_parent().add_child(m)
-	#
+	
+	var m = ColorRect.new()
+	m.position = Vector2(end)     # where you want it
+	m.size = Vector2(10, 10)      # 10x10
+	m.color = Color.WHITE         # white
+	if(team == "enemy"):
+		m.color = Color.BLACK         # white
+	get_parent().add_child(m)
+	
 	var g = 5000.0
 	var vx = 1000.0
 	
@@ -214,13 +216,19 @@ func shoot_arrow():
 	print("target: ", dx,", ", dy)
 	
 	# decrease dx by dy
-	dx -= dy
+	if(team == "enemy"):
+		dx += dy
+	else:
+		dx -= dy
 	
 	var t = abs(dx)/ vx
 	
-	var vy = -(g * (t/2)) - 200
+	var vy = -(g * (t/2))
 	
-	var max_y = end.y + 20
+	var max_y = end.y + 50
+	if(team == "enemy"):
+		vx = -vx
+	
 	# spawn the arrow
 	var arrow = ARROW.instantiate()
 	arrow.position = start

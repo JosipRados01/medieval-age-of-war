@@ -25,7 +25,7 @@ func _physics_process(delta: float) -> void:
 	if velocity.length() > 0:
 		rotation = velocity.angle()
 	
-	if position.y > max_y:
+	if velocity.y > 0 and position.y > max_y:
 		#stab the arrow into the ground
 		stabbed = true
 		$HurtBox/CollisionShape2D.disabled = true
