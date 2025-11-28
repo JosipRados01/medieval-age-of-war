@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://cfxh134vqr0ko"]
+
+[ext_resource type="Script" uid="uid://dcpwvokyvq4y6" path="res://arrow.gd" id="1_2ndhl"]
+[ext_resource type="Texture2D" uid="uid://245k6vxrier8" path="res://assets/Units/Blue Units/Archer/Arrow.png" id="2_acd0x"]
+[ext_resource type="Texture2D" uid="uid://b3dwkte8mueyl" path="res://assets/Units/Blue Units/Archer/Arrow_stuck.png" id="3_acd0x"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_6a6ax"]
+height = 46.0
+
+[node name="Arrow" type="Node2D"]
+script = ExtResource("1_2ndhl")
+
+[node name="Arrow" type="Sprite2D" parent="."]
+texture = ExtResource("2_acd0x")
+
+[node name="ArrowStuck" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("3_acd0x")
+
+[node name="HurtBox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtBox"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_6a6ax")
+
+[connection signal="area_entered" from="HurtBox" to="." method="_on_hurt_box_area_entered"]

@@ -4,6 +4,7 @@ extends CanvasLayer
 @onready var icons: HBoxContainer = $Control/MarginContainer/Hbox/Vbox_left/icons
 @onready var wave_timer_label: Label = $Control/MarginContainer/Hbox/Vbox_right/Wave_timer/Wave_timer_label
 const ICON_KNIGHT = preload("res://icon_knight.tscn")
+const ICON_ARCHER = preload("res://icon_archer.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	Singleton.game_ui = self
@@ -26,6 +27,9 @@ func update_icons(units_array):
 	for unit in units_array:
 		if unit == "knight":
 			var instance = ICON_KNIGHT.instantiate()
+			icons.add_child(instance)
+		if unit == "archer":
+			var instance = ICON_ARCHER.instantiate()
 			icons.add_child(instance)
 		
 

@@ -13,6 +13,7 @@ var wave_spawn_timer = 0
 var wave_spawn_interval = 1200
 
 const KNIGHT = preload("res://knight.tscn")
+const ARCHER = preload("res://archer.tscn")
 
 const units_enum = {
 	"knight": "knight",
@@ -40,7 +41,12 @@ func _process(delta: float) -> void:
 	if (Input.is_action_just_pressed("spawn_knight") and player_points >= units_cost.knight):
 		player_points -= units_cost.knight
 		player_spawn_queue.append(units_enum.knight)
-		
+	
+	if (Input.is_action_just_pressed("spawn_archer") and player_points >= units_cost.archer):
+		player_points -= units_cost.archer
+		player_spawn_queue.append(units_enum.archer)
+	
+	if Input.is_action_just_pressed("spawn_archer") or Input.is_action_just_pressed("spawn_knight"):
 		Singleton.update_icons(player_spawn_queue)
 		Singleton.update_points()
 	
@@ -82,8 +88,8 @@ func spawnUnit(team):
 	var unit_instance
 	if unit_type == units_enum.knight:
 		unit_instance = KNIGHT.instantiate()
-	#elif unit_type == units_enum.archer:
-		#unit_instance = ARCHER.instantiate()
+	elif unit_type == units_enum.archer:
+		unit_instance = ARCHER.instantiate()
 	#elif unit_type == units_enum.spearman:
 		#unit_instance = SPEARMAN.instantiate()
 	unit_instance.team = team
