@@ -12,8 +12,8 @@ var animated_sprite: AnimatedSprite2D
 @onready var point_on_path : PathFollow2D = $"../../Path/point_on_path"
 @onready var death_particles: CPUParticles2D = $DeathParticles
 
-@export var health := 200
-var damage := 40
+@export var health := 150
+var damage := 50
 var can_attack_again_timer
 var movement_speed := 200
 # "player" | "enemy"
@@ -24,7 +24,7 @@ var points = 50
 var is_combat_mode: bool = false
 var is_attacking: bool = false
 var can_attack: bool = true
-var attack_cooldown_frames = 10
+var attack_cooldown_frames = 20
 
 @export var progress_on_path_precentage:float 
 var progress_on_path_pixels := 0.0
