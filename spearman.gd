@@ -12,10 +12,10 @@ var animated_sprite: AnimatedSprite2D
 @onready var point_on_path : PathFollow2D = $"../../Path/point_on_path"
 @onready var death_particles: CPUParticles2D = $DeathParticles
 
-@export var health := 100
-var damage := 30
+@export var health := 200
+var damage := 40
 var can_attack_again_timer
-var movement_speed := 150
+var movement_speed := 200
 # "player" | "enemy"
 @export var team := "player"
 # how many points the unit is worth on death

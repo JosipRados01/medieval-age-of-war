@@ -14,7 +14,7 @@ var movement_speed := 100
 # "player" | "enemy"
 @export var team := "player"
 # how many points the unit is worth on death
-var points = 60
+var points = 90
 
 var is_combat_mode: bool = false
 var is_attacking: bool = false
@@ -187,58 +187,57 @@ func get_closest_enemy(to_position: Vector2, enemies: Array) -> Node2D:
 
 
 func shoot_arrow():
-	# get target enemy
 	var enemies = get_enemies_detected()
-	if enemies.size() == 0:
+	if enemies.is_empty():
 		return
-	
-	var target_enemy = get_closest_enemy(global_position, enemies)
 
-	
-	# calculate initial velocity for arrow
+	var target = get_closest_enemy(global_position, enemies)
 	var start = global_position
-	var end = target_enemy.global_position
-	
-	var m = ColorRect.new()
-	m.position = Vector2(end)     # where you want it
-	m.size = Vector2(10, 10)      # 10x10
-	m.color = Color.WHITE         # white
-	if(team == "enemy"):
-		m.color = Color.BLACK         # white
-	get_parent().add_child(m)
-	
-	var g = 5000.0
-	var vx = 1000.0
-	
+	var end = target.global_position
+
+	# ---- SETTINGS ----
+	var g = 5000.0               # gravity
+	var extra_height = 100.0     # how high above the higher point the apex should be
+
+	# ---- TRAJECTORY CALCULATION ----
 	var dx = end.x - start.x
 	var dy = end.y - start.y
-	
-	print("target: ", dx,", ", dy)
-	
-	# decrease dx by dy
-	if(team == "enemy"):
-		dx += dy
+
+	# choose apex height
+	var apex_y = min(start.y, end.y) - extra_height
+
+	# vertical velocities
+	var vy_up = sqrt(2.0 * g * (start.y - apex_y))
+	var vy_down = sqrt(2.0 * g * (end.y - apex_y))
+
+	# times for vertical travel
+	var t_up = vy_up / g
+	var t_down = vy_down / g
+	var total_t = t_up + t_down     # total flight time
+
+	# horizontal velocity needed to land exactly on target
+	var vx = dx / total_t
+
+	# pick upward velocity
+	var vy = -vy_up
+
+	# enemy team reversal
+	if team == "enemy":
+		vx = -abs(vx)
 	else:
-		dx -= dy
-	
-	var t = abs(dx)/ vx
-	
-	var vy = -(g * (t/2))
-	
-	var max_y = end.y + 50
-	if(team == "enemy"):
-		vx = -vx
-	
-	# spawn the arrow
+		vx = abs(vx)
+
+	# ---- SPAWN ARROW ----
 	var arrow = ARROW.instantiate()
 	arrow.position = start
 	arrow.gravity = g
-	print("speed" ,Vector2(vx, vy))
 	arrow.velocity = Vector2(vx, vy)
 	arrow.team = team
 	arrow.damage = damage
-	arrow.max_y = max_y
+	arrow.max_y = end.y + 50
 	get_parent().add_child(arrow)
+
+
 
 func idle():
 	animated_sprite.play("idle")

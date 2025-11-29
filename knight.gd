@@ -8,8 +8,8 @@ var animated_sprite: AnimatedSprite2D
 @onready var point_on_path : PathFollow2D = $"../../Path/point_on_path"
 @onready var death_particles: CPUParticles2D = $DeathParticles
 
-@export var health := 160
-var damage := 30
+@export var health := 350
+var damage := 40
 var can_attack_again_timer
 var movement_speed := 100
 # "player" | "enemy"

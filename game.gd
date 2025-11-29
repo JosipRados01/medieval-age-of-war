@@ -5,12 +5,12 @@ var enemy_spawn_queue = []
 var current_enemy_wave = []
 var player_spawn_queue = []
 var current_player_wave = []
-var enemy_points = 200
-var player_points = 200
+var enemy_points = 600
+var player_points = 600
 var spawn_timer = 0
 var spawn_interval = 60
 var wave_spawn_timer = 0
-var wave_spawn_interval = 100 # increase before release
+var wave_spawn_interval = 1200
 
 const KNIGHT = preload("res://knight.tscn")
 const ARCHER = preload("res://archer.tscn")
@@ -24,7 +24,7 @@ const units_enum = {
 
 const units_cost = {
 	"knight": 30,
-	"archer": 50,
+	"archer": 80,
 	"spearman": 40
 }
 
@@ -34,6 +34,8 @@ const units_cost = {
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	Singleton.game = self
+	Singleton.update_points()
+	
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -59,7 +61,8 @@ func _process(delta: float) -> void:
 	wave_spawn_timer += 1
 	if(wave_spawn_timer % wave_spawn_interval == 0):
 		while enemy_points >= units_cost.knight:
-			var selected_unit = [units_enum.knight, units_enum.archer, units_enum.spearman].pick_random()
+			# twice as likely to select archers
+			var selected_unit = [units_enum.knight, units_enum.archer, units_enum.archer, units_enum.spearman].pick_random()
 			if enemy_points < units_cost[selected_unit]:
 				selected_unit = units_enum.knight
 			

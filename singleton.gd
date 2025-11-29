@@ -6,9 +6,9 @@ var game_ui
 
 func add_points(team:String, points:int):
 	if(team == "player"):
-		game.player_points += points
-	else:
 		game.enemy_points += points
+	else:
+		game.player_points += points
 	
 	game_ui.update_points(game.player_points)
 
