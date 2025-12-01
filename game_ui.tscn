@@ -70,17 +70,51 @@ layout_mode = 2
 
 [node name="TextureRect" type="TextureRect" parent="Control/MarginContainer/Hbox/Vbox_right/Wave_timer"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-scale = Vector2(2, 2)
+offset_left = 219.0
+offset_top = 8.0
+offset_right = 570.0
+offset_bottom = 139.0
+scale = Vector2(1.2, 1.2)
 texture = ExtResource("1_3cv1o")
 
 [node name="Wave_timer_label" type="Label" parent="Control/MarginContainer/Hbox/Vbox_right/Wave_timer"]
 layout_mode = 0
-offset_left = 30.0
-offset_top = 21.0
-offset_right = 296.0
-offset_bottom = 78.0
+offset_left = -25.0
+offset_top = 23.0
+offset_right = 557.0
+offset_bottom = 136.0
 theme_override_fonts/font = ExtResource("2_2ykv4")
 theme_override_font_sizes/font_size = 100
 text = "00:10"
+horizontal_alignment = 2
+
+[node name="spacer" type="Control" parent="Control/MarginContainer/Hbox/Vbox_right"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="units" type="Control" parent="Control/MarginContainer/Hbox/Vbox_right"]
+custom_minimum_size = Vector2(0, 300)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Control/MarginContainer/Hbox/Vbox_right/units"]
+layout_mode = 0
+offset_left = -46.0
+offset_top = -48.0
+offset_right = 293.0
+offset_bottom = 133.0
+scale = Vector2(2, 2)
+texture = ExtResource("1_3cv1o")
+
+[node name="Label" type="Label" parent="Control/MarginContainer/Hbox/Vbox_right/units"]
+layout_mode = 0
+offset_left = 11.0
+offset_top = -28.0
+offset_right = 530.0
+offset_bottom = 329.0
+theme_override_font_sizes/font_size = 50
+text = "Spearman -> J
+Knight -> K
+Archer -> L
+Remove -> Backspace
+"
+horizontal_alignment = 2

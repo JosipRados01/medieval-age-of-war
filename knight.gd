@@ -229,6 +229,7 @@ func die():
 	death_particles.reparent(get_parent())
 	death_particles.emitting = true
 	death_particles.connect("finished", Callable(self, "_on_death_particles_finished"))
+	Singleton.play_death_sound(position)
 	queue_free()
 
 func _on_death_particles_finished():
@@ -247,6 +248,8 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 func _on_animated_sprite_2d_frame_changed() -> void:
 	if animated_sprite.animation == "attack_1" or animated_sprite.animation == "attack_2":
 		hurtbox.disabled = animated_sprite.frame != 2
+		if animated_sprite.frame == 2 :
+			%sfx_attack.play()
 	else:
 		hurtbox.disabled = true
 

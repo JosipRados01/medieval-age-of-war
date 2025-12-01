@@ -1,4 +1,4 @@
-[gd_scene load_steps=51 format=3 uid="uid://cep7q7cyxt51r"]
+[gd_scene load_steps=55 format=3 uid="uid://cep7q7cyxt51r"]
 
 [ext_resource type="Script" uid="uid://bb7ypbbk53tu4" path="res://spearman.gd" id="1_5xrmj"]
 [ext_resource type="Texture2D" uid="uid://c72n4730vojyg" path="res://assets/Units/Blue Units/Lancer/Lancer_DownRight_Attack.png" id="2_u37gh"]
@@ -9,6 +9,9 @@
 [ext_resource type="Texture2D" uid="uid://on3xt8nk1trh" path="res://assets/Units/Red Units/Lancer/Lancer_Right_Attack.png" id="7_dbnw6"]
 [ext_resource type="Texture2D" uid="uid://t188rc8nhcyx" path="res://assets/Units/Red Units/Lancer/Lancer_UpRight_Attack.png" id="8_02m10"]
 [ext_resource type="Texture2D" uid="uid://b07lljytaallk" path="res://assets/Units/Red Units/Lancer/Lancer_Run.png" id="9_mmasm"]
+[ext_resource type="AudioStream" uid="uid://bnkislt7l3rbe" path="res://sound/sword_1.mp3" id="10_mmasm"]
+[ext_resource type="AudioStream" uid="uid://dp1hcsxoshld4" path="res://sound/sword_2.mp3" id="11_b88q2"]
+[ext_resource type="AudioStream" uid="uid://of58qb6stoma" path="res://sound/sword_3.mp3" id="12_ok1b5"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dbnw6"]
 radius = 19.0263
@@ -300,6 +303,14 @@ height = 111.776
 radius = 9.18493
 height = 115.985
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_4l4nf"]
+random_pitch = 1.41
+random_volume_offset_db = 1.0
+streams_count = 3
+stream_0/stream = ExtResource("10_mmasm")
+stream_1/stream = ExtResource("11_b88q2")
+stream_2/stream = ExtResource("12_ok1b5")
+
 [node name="Spearman" type="CharacterBody2D"]
 script = ExtResource("1_5xrmj")
 
@@ -412,6 +423,13 @@ scale_amount_min = 2.0
 scale_amount_max = 4.0
 color = Color(0.745098, 0.2, 0.141176, 1)
 hue_variation_max = 0.4
+
+[node name="sfx_attack" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = SubResource("AudioStreamRandomizer_4l4nf")
+volume_db = -15.0
+pitch_scale = 1.5
+max_polyphony = 2
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="frame_changed" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_frame_changed"]

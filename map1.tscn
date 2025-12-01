@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=4 uid="uid://sdjghkpol7d1"]
+[gd_scene load_steps=73 format=4 uid="uid://sdjghkpol7d1"]
 
 [ext_resource type="Texture2D" uid="uid://c08xf4g24ltv3" path="res://assets/Terrain/Water Background color.png" id="1_2kv0r"]
 [ext_resource type="Script" uid="uid://bopg7e1114qjl" path="res://game.gd" id="1_ci8wy"]
@@ -29,11 +29,18 @@
 [ext_resource type="Texture2D" uid="uid://c3eagwxl6jtbu" path="res://assets/Buildings/Blue Buildings/Monastery.png" id="20_yyvg5"]
 [ext_resource type="Texture2D" uid="uid://bbq43diuipe6r" path="res://assets/Buildings/Blue Buildings/Tower.png" id="21_6p0w6"]
 [ext_resource type="Texture2D" uid="uid://dm2vdxjmpw8ay" path="res://assets/Buildings/Red Buildings/Monastery.png" id="21_u3gpx"]
-[ext_resource type="PackedScene" uid="uid://cep7q7cyxt51r" path="res://spearman.tscn" id="23_u3gpx"]
+[ext_resource type="AudioStream" uid="uid://dls38laeaqcsa" path="res://sound/thump.mp3" id="23_5qgxo"]
+[ext_resource type="AudioStream" uid="uid://cbnyxw4pnskl" path="res://sound/music_1.mp3" id="23_8gc38"]
+[ext_resource type="AudioStream" uid="uid://bunldi4xqq48b" path="res://sound/game_music.mp3" id="23_kyf65"]
+[ext_resource type="AudioStream" uid="uid://dtrot6i3tseab" path="res://sound/music_2.mp3" id="24_5qgxo"]
+[ext_resource type="AudioStream" uid="uid://cbh6dowa4tp1n" path="res://sound/music_3.mp3" id="25_uei6f"]
+[ext_resource type="AudioStream" uid="uid://7va73ivpnkx7" path="res://sound/music_4.mp3" id="26_ia807"]
 [ext_resource type="Texture2D" uid="uid://bqej0e74g3mk7" path="res://assets/Buildings/Red Buildings/Archery.png" id="28_kyf65"]
 [ext_resource type="Texture2D" uid="uid://dnbb70gvsak7j" path="res://assets/Buildings/Red Buildings/Barracks.png" id="29_qsu6d"]
 [ext_resource type="PackedScene" uid="uid://dnq1mw7v4pkg7" path="res://knight.tscn" id="31_gq3xk"]
 [ext_resource type="PackedScene" uid="uid://bh31qvhyy6jq2" path="res://game_ui.tscn" id="33_tlimo"]
+[ext_resource type="AudioStream" uid="uid://dcf7j1m35gld" path="res://sound/new_wave.mp3" id="35_kyf65"]
+[ext_resource type="AudioStream" uid="uid://c4u2poaj4tvn7" path="res://sound/clock_ticking_down.mp3" id="36_qsu6d"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_r8k3y"]
 texture = ExtResource("1_2kv0r")
@@ -200,6 +207,19 @@ sources/13 = SubResource("TileSetAtlasSource_5qgxo")
 sources/14 = SubResource("TileSetAtlasSource_uei6f")
 sources/15 = SubResource("TileSetAtlasSource_ia807")
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_uei6f"]
+random_pitch = 1.5
+streams_count = 1
+stream_0/stream = ExtResource("23_5qgxo")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_od5ol"]
+streams_count = 5
+stream_0/stream = ExtResource("23_8gc38")
+stream_1/stream = ExtResource("24_5qgxo")
+stream_2/stream = ExtResource("25_uei6f")
+stream_3/stream = ExtResource("26_ia807")
+stream_4/stream = ExtResource("23_kyf65")
+
 [sub_resource type="Curve2D" id="Curve2D_k1tuh"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, 119, 294, 0, 0, 0, 0, 416, 337, 0, 0, 0, 0, 622, 462, 0, 0, 0, 0, 757, 540, 0, 0, 0, 0, 940, 629, 0, 0, 0, 0, 1133, 636, 0, 0, 0, 0, 1377, 629, 0, 0, 0, 0, 1680, 595, 0, 0, 0, 0, 1786, 475, 0, 0, 0, 0, 1858, 320, 0, 0, 0, 0, 1898, 148, 0, 0, 0, 0, 1947, -7, 0, 0, 0, 0, 2072, -113, 0, 0, 0, 0, 2273, -151, 0, 0, 0, 0, 2513, -183, 0, 0, 0, 0, 2695, -183, 0, 0, 0, 0, 2939, -208, 0, 0, 0, 0, 3178, -196, 0, 0, 0, 0, 3341, -168, 0, 0, 0, 0, 3513, -196, 0, 0, 0, 0, 3646, -260, 0, 0, 0, 0, 3827, -230, 0, 0, 0, 0, 4058, -182, 0, 0, 0, 0, 4253, -175, 0, 0, 0, 0, 4382, -103, 0, 0, 0, 0, 4611, -56, 0, 0, 0, 0, 4743, 50, 0, 0, 0, 0, 4893, 192, 0, 0, 0, 0, 5063, 301, 0, 0, 0, 0, 5241, 313, 0, 0, 0, 0, 5354, 366, 0, 0, 0, 0, 5456, 449, 0, 0, 0, 0, 5596, 519, 0, 0, 0, 0, 5740, 523, 0, 0, 0, 0, 5850, 570, 0, 0, 0, 0, 5977, 726)
@@ -247,6 +267,12 @@ sources/2 = SubResource("TileSetAtlasSource_758qj")
 sources/3 = SubResource("TileSetAtlasSource_muogi")
 sources/4 = SubResource("TileSetAtlasSource_awt07")
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_5qgxo"]
+radius = 211.533
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_uei6f"]
+radius = 434.029
+
 [node name="Node2D" type="Node2D"]
 script = ExtResource("1_ci8wy")
 
@@ -272,6 +298,34 @@ position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 script = ExtResource("9_qva1w")
 
+[node name="sfx_new_wave" type="AudioStreamPlayer2D" parent="Camera2D"]
+unique_name_in_owner = true
+position = Vector2(-1150, 0)
+stream = ExtResource("35_kyf65")
+volume_db = -13.0
+max_polyphony = 5
+
+[node name="sfx_clock_ticking" type="AudioStreamPlayer2D" parent="Camera2D"]
+unique_name_in_owner = true
+position = Vector2(-1150, 0)
+stream = ExtResource("36_qsu6d")
+volume_db = -5.0
+max_polyphony = 5
+
+[node name="thump" type="AudioStreamPlayer2D" parent="Camera2D"]
+unique_name_in_owner = true
+position = Vector2(-1150, 0)
+stream = SubResource("AudioStreamRandomizer_uei6f")
+volume_db = -10.0
+max_polyphony = 4
+
+[node name="music" type="AudioStreamPlayer2D" parent="Camera2D"]
+position = Vector2(-1150, 0)
+stream = SubResource("AudioStreamRandomizer_od5ol")
+volume_db = -10.0
+autoplay = true
+bus = &"music"
+
 [node name="CameraRig" type="Node2D" parent="."]
 
 [node name="Path" type="Path2D" parent="."]
@@ -286,16 +340,6 @@ y_sort_enabled = true
 
 [node name="Knight2" parent="PlayLayer" instance=ExtResource("31_gq3xk")]
 position = Vector2(203, 333)
-progress_on_path_precentage = 0.01
-
-[node name="Knight3" parent="PlayLayer" instance=ExtResource("31_gq3xk")]
-position = Vector2(323, 413)
-team = "enemy"
-progress_on_path_precentage = 0.2
-
-[node name="Spearman" parent="PlayLayer" instance=ExtResource("23_u3gpx")]
-position = Vector2(831, 584)
-progress_on_path_precentage = 0.6
 
 [node name="Decorations" type="TileMapLayer" parent="PlayLayer"]
 y_sort_enabled = true
@@ -303,3 +347,30 @@ tile_map_data = PackedByteArray("AAAdAPb/AAAAAAAAAQAhAPX/AAAAAAAAAQAnAPj/AAAAAAA
 tile_set = SubResource("TileSet_2abic")
 
 [node name="CanvasLayer" parent="." instance=ExtResource("33_tlimo")]
+
+[node name="WaveTimer" type="Timer" parent="."]
+wait_time = 15.0
+autostart = true
+
+[node name="clockSoundTimer" type="Timer" parent="."]
+wait_time = 11.0
+one_shot = true
+autostart = true
+
+[node name="Win_condition_area" type="Area2D" parent="."]
+position = Vector2(5933, 726)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Win_condition_area"]
+position = Vector2(10, -6)
+shape = SubResource("CircleShape2D_5qgxo")
+
+[node name="Loose_condition_area" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Loose_condition_area"]
+position = Vector2(18, 9)
+shape = SubResource("CircleShape2D_uei6f")
+
+[connection signal="timeout" from="WaveTimer" to="." method="_on_wave_timer_timeout"]
+[connection signal="timeout" from="clockSoundTimer" to="." method="_on_clock_sound_timer_timeout"]
+[connection signal="body_entered" from="Win_condition_area" to="." method="_on_win_condition_area_body_entered"]
+[connection signal="body_entered" from="Loose_condition_area" to="." method="_on_loose_condition_area_body_entered"]

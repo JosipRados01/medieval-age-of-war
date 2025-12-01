@@ -7,14 +7,21 @@ var player_spawn_queue = []
 var current_player_wave = []
 var enemy_points = 600
 var player_points = 600
+
 var spawn_timer = 0
-var spawn_interval = 60
-var wave_spawn_timer = 0
-var wave_spawn_interval = 1200
+var spawn_interval = 30
+
+@onready var clock_sound_timer: Timer = $clockSoundTimer
+@onready var wave_timer: Timer = $WaveTimer
+
 
 const KNIGHT = preload("res://knight.tscn")
 const ARCHER = preload("res://archer.tscn")
 const SPEARMAN = preload("res://spearman.tscn")
+
+@onready var sfx_new_wave: AudioStreamPlayer2D = %sfx_new_wave
+@onready var sfx_clock_ticking: AudioStreamPlayer2D = %sfx_clock_ticking
+
 
 const units_enum = {
 	"knight": "knight",
@@ -24,8 +31,8 @@ const units_enum = {
 
 const units_cost = {
 	"knight": 30,
+	"spearman": 40,
 	"archer": 80,
-	"spearman": 40
 }
 
 @onready var play_layer: Node2D = $PlayLayer
@@ -53,33 +60,15 @@ func _process(delta: float) -> void:
 		player_points -= units_cost.spearman
 		player_spawn_queue.append(units_enum.spearman)
 	
-	if Input.is_action_just_pressed("spawn_archer") or Input.is_action_just_pressed("spawn_knight") or Input.is_action_just_pressed("spawn_spearman"):
+	if (Input.is_action_just_pressed("cancel_unit")):
+		cancel_unit()
+	
+	if Input.is_action_just_pressed("spawn_archer") or Input.is_action_just_pressed("spawn_knight") or Input.is_action_just_pressed("spawn_spearman") or Input.is_action_just_pressed("cancel_unit"):
 		Singleton.update_icons(player_spawn_queue)
 		Singleton.update_points()
+		%thump.play()
 	
-	# Check if the enemy should summon their wave
-	wave_spawn_timer += 1
-	if(wave_spawn_timer % wave_spawn_interval == 0):
-		while enemy_points >= units_cost.knight:
-			# twice as likely to select archers
-			var selected_unit = [units_enum.knight, units_enum.archer, units_enum.archer, units_enum.spearman].pick_random()
-			if enemy_points < units_cost[selected_unit]:
-				selected_unit = units_enum.knight
-			
-			enemy_points -= units_cost[selected_unit]
-			enemy_spawn_queue.append(selected_unit)
-	
-	if(wave_spawn_timer % wave_spawn_interval == 0):
-		# empty both arrays and move them to the next wave
-		current_enemy_wave.append_array(enemy_spawn_queue.duplicate())
-		enemy_spawn_queue.clear()
-
-		current_player_wave.append_array(player_spawn_queue.duplicate())
-		player_spawn_queue.clear()
-		
-		Singleton.update_icons(player_spawn_queue)
-	
-	Singleton.update_wave_timer(wave_spawn_interval - (wave_spawn_timer % wave_spawn_interval))
+	Singleton.update_wave_timer(wave_timer)
 	
 	# if there's anything in the queues summon every 60 frames
 	spawn_timer += 1
@@ -105,4 +94,56 @@ func spawnUnit(team):
 	elif unit_type == units_enum.spearman:
 		unit_instance = SPEARMAN.instantiate()
 	unit_instance.team = team
+	# initial position should not be in the loose area for any unit
+	unit_instance.position = Vector2(500, 500)
 	play_layer.add_child(unit_instance)
+
+
+func _on_wave_timer_timeout() -> void:
+	# calculate what units the enemy should spawn
+	while enemy_points >= units_cost.knight:
+		# twice as likely to select archers
+		var selected_unit = [units_enum.knight, units_enum.archer, units_enum.archer, units_enum.spearman].pick_random()
+		if enemy_points < units_cost[selected_unit]:
+			selected_unit = units_enum.knight
+		
+		enemy_points -= units_cost[selected_unit]
+		enemy_spawn_queue.append(selected_unit)
+	
+	# start wave
+	# empty both arrays and move them to the next wave
+	current_enemy_wave.append_array(enemy_spawn_queue.duplicate())
+	enemy_spawn_queue.clear()
+
+	current_player_wave.append_array(player_spawn_queue.duplicate())
+	player_spawn_queue.clear()
+	
+	Singleton.update_icons(player_spawn_queue)
+	clock_sound_timer.start()
+	sfx_new_wave.play()
+
+
+func _on_clock_sound_timer_timeout() -> void:
+	sfx_clock_ticking.play()
+
+
+func cancel_unit():
+	if (player_spawn_queue.size() > 0 ):
+		var last_unit = player_spawn_queue.pop_back()
+		player_points += units_cost[last_unit]
+
+
+func _on_loose_condition_area_body_entered(body: Node2D) -> void:
+	# check if its an enemy
+	if body.has_method("_get_team"):
+		var team = body._get_team()
+		if team == "enemy":
+			get_tree().reload_current_scene()
+
+
+func _on_win_condition_area_body_entered(body: Node2D) -> void:
+	# check if its a player unit (win condition)
+	if body.has_method("_get_team"):
+		var team = body._get_team()
+		if team == "player":
+			get_tree().reload_current_scene()

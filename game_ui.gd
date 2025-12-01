@@ -38,9 +38,9 @@ func update_icons(units_array):
 			icons.add_child(instance)
 		
 
-func update_wave_timer(frames_left):
-	var seconds = frames_left / 60.0
-	var m = int(seconds / 60)
-	var s = int(seconds) % 60
-	var time = "%02d:%02d" % [m, s]
+func update_wave_timer(timer: Timer):
+	var time_left: float = timer.time_left
+	var m = int(time_left)
+	var time = "%02d" % [m]
+	time += " s"
 	wave_timer_label.text = time

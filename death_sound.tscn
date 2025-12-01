@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://2egh8gru4htn"]
+
+[ext_resource type="Script" uid="uid://dljydecpfldwb" path="res://death_sound.gd" id="1_2updd"]
+[ext_resource type="AudioStream" uid="uid://d1chu4lxhmrjt" path="res://sound/death_1.mp3" id="1_nnko3"]
+[ext_resource type="AudioStream" uid="uid://bkx6l17ubpw18" path="res://sound/death_2.mp3" id="2_2updd"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_nn3o4"]
+random_pitch = 1.73
+streams_count = 2
+stream_0/stream = ExtResource("1_nnko3")
+stream_1/stream = ExtResource("2_2updd")
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_2updd")
+
+[node name="sfx_death" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_nn3o4")
+volume_db = -10.0

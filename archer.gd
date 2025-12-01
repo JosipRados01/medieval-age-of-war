@@ -156,6 +156,7 @@ func die():
 	death_particles.reparent(get_parent())
 	death_particles.emitting = true
 	death_particles.connect("finished", Callable(self, "_on_death_particles_finished"))
+	Singleton.play_death_sound(position)
 	queue_free()
 
 func _on_death_particles_finished():
@@ -236,6 +237,7 @@ func shoot_arrow():
 	arrow.damage = damage
 	arrow.max_y = end.y + 50
 	get_parent().add_child(arrow)
+	%sfx_shoot.play()
 
 
 
