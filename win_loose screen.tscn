@@ -1,0 +1,129 @@
+[gd_scene load_steps=4 format=3 uid="uid://yrcw4utwglcy"]
+
+[ext_resource type="FontFile" uid="uid://bjbonoi056l65" path="res://assets/onciale-phf.regular.ttf" id="1_dy0wo"]
+[ext_resource type="Script" uid="uid://cxru6uguuwy33" path="res://win_loose_screen.gd" id="1_nkvji"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_nkvji"]
+load_path = "res://.godot/imported/title_background.png-19f2d7dad6a83622afc6f53875bea71e.ctex"
+
+[node name="Main menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_nkvji")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+custom_minimum_size = Vector2(500, 300)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = -4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(500, 800)
+layout_mode = 2
+size_flags_horizontal = 6
+alignment = 1
+
+[node name="Control" type="Control" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(600, 550)
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -382.5
+offset_top = -146.5
+offset_right = 382.5
+offset_bottom = 146.5
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("CompressedTexture2D_nkvji")
+
+[node name="Win" type="Label" parent="HBoxContainer/VBoxContainer/Control/TextureRect"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 79.3333
+offset_right = 721.0
+offset_bottom = 240.333
+theme_override_fonts/font = ExtResource("1_dy0wo")
+theme_override_font_sizes/font_size = 70
+text = "Good job Commander!
+You Win"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Loose" type="Label" parent="HBoxContainer/VBoxContainer/Control/TextureRect"]
+visible = false
+layout_mode = 0
+offset_left = 46.6667
+offset_top = 60.0
+offset_right = 731.667
+offset_bottom = 221.0
+theme_override_fonts/font = ExtResource("1_dy0wo")
+theme_override_font_sizes/font_size = 70
+text = "You gave them hell, but to no avail"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Play" type="Control" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 160)
+layout_mode = 2
+
+[node name="Button" type="Button" parent="HBoxContainer/VBoxContainer/Play"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -275.0
+offset_top = -60.5
+offset_right = 275.0
+offset_bottom = 60.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_dy0wo")
+theme_override_font_sizes/font_size = 75
+text = "Play again"
+
+[node name="Menu" type="Control" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 160)
+layout_mode = 2
+
+[node name="Button" type="Button" parent="HBoxContainer/VBoxContainer/Menu"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -144.5
+offset_top = -60.5
+offset_right = 144.5
+offset_bottom = 60.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("1_dy0wo")
+theme_override_font_sizes/font_size = 75
+text = "Menu"
+
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/Play/Button" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/Menu/Button" to="." method="_on_tutorial_button_pressed"]

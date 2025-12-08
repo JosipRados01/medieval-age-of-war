@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://bs77el1clkou4" path="res://assets/ui/spearman_icon.png" id="1_1u2eb"]
 
 [node name="Control" type="Control"]
-custom_minimum_size = Vector2(96, 96)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,5 +15,4 @@ grow_vertical = 2
 layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
-scale = Vector2(1.5, 1.5)
 texture = ExtResource("1_1u2eb")

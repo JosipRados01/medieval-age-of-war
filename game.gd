@@ -18,6 +18,7 @@ var spawn_interval = 30
 const KNIGHT = preload("res://knight.tscn")
 const ARCHER = preload("res://archer.tscn")
 const SPEARMAN = preload("res://spearman.tscn")
+const WIN_LOSE_SCREEN = preload("res://win_loose screen.tscn")
 
 @onready var sfx_new_wave: AudioStreamPlayer2D = %sfx_new_wave
 @onready var sfx_clock_ticking: AudioStreamPlayer2D = %sfx_clock_ticking
@@ -36,6 +37,7 @@ const units_cost = {
 }
 
 @onready var play_layer: Node2D = $PlayLayer
+@onready var canvas_layer: CanvasLayer = $CanvasLayer
 
 
 # Called when the node enters the scene tree for the first time.
@@ -138,7 +140,10 @@ func _on_loose_condition_area_body_entered(body: Node2D) -> void:
 	if body.has_method("_get_team"):
 		var team = body._get_team()
 		if team == "enemy":
-			get_tree().reload_current_scene()
+			var win_lose_screen = WIN_LOSE_SCREEN.instantiate()
+			canvas_layer.add_child(win_lose_screen)
+			win_lose_screen.loose_display()
+			get_tree().paused = true
 
 
 func _on_win_condition_area_body_entered(body: Node2D) -> void:
@@ -146,4 +151,7 @@ func _on_win_condition_area_body_entered(body: Node2D) -> void:
 	if body.has_method("_get_team"):
 		var team = body._get_team()
 		if team == "player":
-			get_tree().reload_current_scene()
+			var win_lose_screen = WIN_LOSE_SCREEN.instantiate()
+			canvas_layer.add_child(win_lose_screen)
+			win_lose_screen.win_display()
+			get_tree().paused = true

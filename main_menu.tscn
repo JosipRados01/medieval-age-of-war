@@ -42,21 +42,22 @@ size_flags_horizontal = 4
 
 [node name="TextureRect" type="TextureRect" parent="HBoxContainer/VBoxContainer/Control"]
 layout_mode = 0
-offset_right = 396.0
-offset_bottom = 293.0
+offset_right = 413.0
+offset_bottom = 305.0
 scale = Vector2(1.5, 1.5)
 texture = ExtResource("1_7vrkn")
 
 [node name="Label" type="Label" parent="HBoxContainer/VBoxContainer/Control/TextureRect"]
 layout_mode = 0
-offset_left = 74.0
-offset_top = 57.0
-offset_right = 329.0
-offset_bottom = 218.0
+offset_left = 15.3333
+offset_top = 26.0
+offset_right = 394.333
+offset_bottom = 269.0
 theme_override_fonts/font = ExtResource("2_fu7sn")
 theme_override_font_sizes/font_size = 70
-text = "Tide of
-WAR"
+text = "Tiny 
+Knights 
+Commander"
 horizontal_alignment = 1
 
 [node name="Play" type="Control" parent="HBoxContainer/VBoxContainer"]
@@ -81,6 +82,7 @@ theme_override_font_sizes/font_size = 100
 text = "Play"
 
 [node name="Tutorial" type="Control" parent="HBoxContainer/VBoxContainer"]
+visible = false
 custom_minimum_size = Vector2(400, 160)
 layout_mode = 2
 

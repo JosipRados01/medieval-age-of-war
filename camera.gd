@@ -1,9 +1,9 @@
 extends Camera2D
 
-var camera_speed := 10
-var zoom_max := Vector2(8, 8)
-var zoom_min := Vector2(1.5, 1.5)
-var zoom_speed := Vector2(0.1, 0.1)
+var camera_speed := 15
+var zoom_max := Vector2(2, 2)
+var zoom_min := Vector2(0.3, 0.3)
+var zoom_speed := Vector2(0.02, 0.02)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
