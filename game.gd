@@ -9,7 +9,7 @@ var enemy_points = 600
 var player_points = 600
 
 var spawn_timer = 0
-var spawn_interval = 30
+var spawn_interval = 25
 
 @onready var clock_sound_timer: Timer = $clockSoundTimer
 @onready var wave_timer: Timer = $WaveTimer

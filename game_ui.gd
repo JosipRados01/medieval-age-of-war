@@ -1,7 +1,7 @@
 extends CanvasLayer
 
 @onready var point_label: Label = $Control/MarginContainer/Hbox/Vbox_left/Points/PointLabel
-@onready var icons: HBoxContainer = $Control/MarginContainer/Hbox/Vbox_left/icons
+@onready var icons: FlowContainer = $Control/MarginContainer/Hbox/Vbox_left/icons
 @onready var wave_timer_label: Label = $Control/MarginContainer/Hbox/Vbox_right/Wave_timer/Wave_timer_label
 const ICON_KNIGHT = preload("res://icon_knight.tscn")
 const ICON_ARCHER = preload("res://icon_archer.tscn")

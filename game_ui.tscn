@@ -56,7 +56,7 @@ theme_override_fonts/font = ExtResource("2_2ykv4")
 theme_override_font_sizes/font_size = 75
 text = "1000 g"
 
-[node name="icons" type="HBoxContainer" parent="Control/MarginContainer/Hbox/Vbox_left"]
+[node name="icons" type="FlowContainer" parent="Control/MarginContainer/Hbox/Vbox_left"]
 layout_mode = 2
 
 [node name="Vbox_right" type="VBoxContainer" parent="Control/MarginContainer/Hbox"]
