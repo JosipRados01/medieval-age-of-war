@@ -293,8 +293,7 @@ tile_set = SubResource("TileSet_tw68m")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(1150, 0)
-zoom = Vector2(1.5, 1.5)
+position = Vector2(254, 292)
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
 script = ExtResource("20_5qgxo")
