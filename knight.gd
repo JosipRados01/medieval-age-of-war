@@ -9,6 +9,7 @@ var animated_sprite: AnimatedSprite2D
 @onready var death_particles: CPUParticles2D = $DeathParticles
 
 @export var health := 350
+const max_health = 350
 var damage := 50
 var can_attack_again_timer
 var movement_speed := 100

@@ -18,6 +18,7 @@ var spawn_interval = 25
 const KNIGHT = preload("res://knight.tscn")
 const ARCHER = preload("res://archer.tscn")
 const SPEARMAN = preload("res://spearman.tscn")
+const HEALER = preload("res://healer.tscn")
 const WIN_LOSE_SCREEN = preload("res://win_loose screen.tscn")
 
 @onready var sfx_new_wave: AudioStreamPlayer2D = %sfx_new_wave
@@ -27,13 +28,15 @@ const WIN_LOSE_SCREEN = preload("res://win_loose screen.tscn")
 const units_enum = {
 	"knight": "knight",
 	"archer": "archer",
-	"spearman": "spearman"
+	"spearman": "spearman",
+	"healer": "healer"
 }
 
 const units_cost = {
 	"knight": 30,
 	"spearman": 40,
 	"archer": 80,
+	"healer": 100,
 }
 
 @onready var play_layer: Node2D = $PlayLayer
@@ -62,10 +65,14 @@ func _process(delta: float) -> void:
 		player_points -= units_cost.spearman
 		player_spawn_queue.append(units_enum.spearman)
 	
+	if (Input.is_action_just_pressed("spawn_healer") and player_points >= units_cost.healer):
+		player_points -= units_cost.healer
+		player_spawn_queue.append(units_enum.healer)
+	
 	if (Input.is_action_just_pressed("cancel_unit")):
 		cancel_unit()
 	
-	if Input.is_action_just_pressed("spawn_archer") or Input.is_action_just_pressed("spawn_knight") or Input.is_action_just_pressed("spawn_spearman") or Input.is_action_just_pressed("cancel_unit"):
+	if Input.is_action_just_pressed("spawn_archer") or Input.is_action_just_pressed("spawn_knight") or Input.is_action_just_pressed("spawn_spearman") or Input.is_action_just_pressed("spawn_healer") or Input.is_action_just_pressed("cancel_unit"):
 		Singleton.update_icons(player_spawn_queue)
 		Singleton.update_points()
 		%thump.play()
@@ -95,6 +102,8 @@ func spawnUnit(team):
 		unit_instance = ARCHER.instantiate()
 	elif unit_type == units_enum.spearman:
 		unit_instance = SPEARMAN.instantiate()
+	elif unit_type == units_enum.healer:
+		unit_instance = HEALER.instantiate()
 	unit_instance.team = team
 	# initial position should not be in the loose area for any unit
 	unit_instance.position = Vector2(500, 500)
@@ -105,7 +114,7 @@ func _on_wave_timer_timeout() -> void:
 	# calculate what units the enemy should spawn
 	while enemy_points >= units_cost.knight:
 		# twice as likely to select archers
-		var selected_unit = [units_enum.knight, units_enum.archer, units_enum.archer, units_enum.spearman].pick_random()
+		var selected_unit = [units_enum.knight, units_enum.archer, units_enum.healer, units_enum.spearman].pick_random()
 		if enemy_points < units_cost[selected_unit]:
 			selected_unit = units_enum.knight
 		

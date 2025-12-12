@@ -6,6 +6,7 @@ extends CanvasLayer
 const ICON_KNIGHT = preload("res://icon_knight.tscn")
 const ICON_ARCHER = preload("res://icon_archer.tscn")
 const ICON_SPEARMAN = preload("res://icon_spearman.tscn")
+const ICON_HEALER = preload("res://icon_healer.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -35,6 +36,9 @@ func update_icons(units_array):
 			icons.add_child(instance)
 		if unit == "spearman":
 			var instance = ICON_SPEARMAN.instantiate()
+			icons.add_child(instance)
+		if unit == "healer":
+			var instance = ICON_HEALER.instantiate()
 			icons.add_child(instance)
 		
 

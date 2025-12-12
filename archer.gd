@@ -8,6 +8,7 @@ var animated_sprite: AnimatedSprite2D
 
 const ARROW = preload("res://arrow.tscn")
 @export var health := 100
+const max_health = 100
 var damage := 40
 var can_attack_again_timer
 var movement_speed := 100
