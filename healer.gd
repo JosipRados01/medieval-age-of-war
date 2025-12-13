@@ -18,7 +18,7 @@ var movement_speed := 150
 # "player" | "enemy"
 @export var team := "player"
 # how many points the unit is worth on death
-var points = 90
+var points = 120
 
 var is_friends_detected: bool = false
 var is_healing: bool = false

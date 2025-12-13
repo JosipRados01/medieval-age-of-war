@@ -20,7 +20,7 @@ var movement_speed := 200
 # "player" | "enemy"
 @export var team := "player"
 # how many points the unit is worth on death
-var points = 50
+var points = 70
 
 var is_combat_mode: bool = false
 var is_attacking: bool = false
