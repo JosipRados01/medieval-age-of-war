@@ -7,9 +7,8 @@ var player_spawn_queue = []
 var current_player_wave = []
 var enemy_points = 800
 var player_points = 600
-
 var spawn_timer = 0
-var spawn_interval = 25
+var spawn_interval = 20
 
 @onready var clock_sound_timer: Timer = $clockSoundTimer
 @onready var wave_timer: Timer = $WaveTimer
@@ -114,6 +113,10 @@ func _on_wave_timer_timeout() -> void:
 	# calculate what units the enemy should spawn using strategic AI
 	calculate_enemy_wave_composition()
 	
+	# check if the queue has over 20 units. if so decrease the time between spawning units
+	if player_spawn_queue.size() > 20:
+		spawn_interval = 10
+	
 	# start wave
 	# empty both arrays and move them to the next wave
 	current_enemy_wave.append_array(enemy_spawn_queue.duplicate())
@@ -127,8 +130,8 @@ func _on_wave_timer_timeout() -> void:
 	sfx_new_wave.play()
 	
 	# Give additional money to you and enemy after wave was summoned
-	enemy_points += 200
-	player_points += 100
+	enemy_points += 100
+	player_points += 50
 	Singleton.update_points()
 
 
@@ -139,6 +142,10 @@ func _on_clock_sound_timer_timeout() -> void:
 func calculate_enemy_wave_composition():
 	var original_points = enemy_points
 	
+	# When under 500 points, 50% chance to wait and spawn nothing (only once at a time)
+	if enemy_points < 500 and randf() < 0.5:
+		return  # Skip spawning this wave
+
 	# Define strategic compositions based on budget ranges
 	if enemy_points >= 500:  # Large budget - Balanced elite army
 		spawn_balanced_elite_army()
