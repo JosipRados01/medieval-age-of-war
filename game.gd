@@ -125,6 +125,11 @@ func _on_wave_timer_timeout() -> void:
 	Singleton.update_icons(player_spawn_queue)
 	clock_sound_timer.start()
 	sfx_new_wave.play()
+	
+	# Give additional money to you and enemy after wave was summoned
+	enemy_points += 200
+	player_points += 100
+	Singleton.update_points()
 
 
 func _on_clock_sound_timer_timeout() -> void:
