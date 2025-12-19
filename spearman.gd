@@ -14,7 +14,7 @@ var animated_sprite: AnimatedSprite2D
 
 @export var health := 150
 const max_health = 150
-var damage := 50
+var damage := 40
 var can_attack_again_timer
 var movement_speed := 200
 # "player" | "enemy"

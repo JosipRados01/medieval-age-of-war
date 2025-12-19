@@ -5,10 +5,11 @@ var enemy_spawn_queue = []
 var current_enemy_wave = []
 var player_spawn_queue = []
 var current_player_wave = []
+var wave_counter := 0
 var enemy_points = 800
 var player_points = 600
 var spawn_timer = 0
-var spawn_interval = 20
+var spawn_interval = 30
 
 @onready var clock_sound_timer: Timer = $clockSoundTimer
 @onready var wave_timer: Timer = $WaveTimer
@@ -20,6 +21,13 @@ const SPEARMAN = preload("res://spearman.tscn")
 const HEALER = preload("res://healer.tscn")
 const WIN_LOSE_SCREEN = preload("res://win_loose screen.tscn")
 
+
+const BEAR = preload("res://bear.tscn")
+const PANDA = preload("res://panda.tscn")
+const GNOME = preload("res://gnome.tscn")
+const SPIDER = preload("res://spider.tscn")
+
+
 @onready var sfx_new_wave: AudioStreamPlayer2D = %sfx_new_wave
 @onready var sfx_clock_ticking: AudioStreamPlayer2D = %sfx_clock_ticking
 
@@ -29,6 +37,20 @@ const units_enum = {
 	"archer": "archer",
 	"spearman": "spearman",
 	"healer": "healer"
+}
+
+const enemy_units_enum = {
+	"bear": "bear",
+	"panda": "panda",
+	"gnome": "gnome",
+	"spider": "spider"
+}
+
+const enemy_units_cost = {
+	"bear": 150,
+	"panda": 80,
+	"gnome": 30,
+	"spider": 30
 }
 
 const units_cost = {
@@ -103,6 +125,15 @@ func spawnUnit(team):
 		unit_instance = SPEARMAN.instantiate()
 	elif unit_type == units_enum.healer:
 		unit_instance = HEALER.instantiate()
+	## ENEMY UNITS
+	elif unit_type == enemy_units_enum.bear:
+		unit_instance = BEAR.instantiate()
+	elif unit_type == enemy_units_enum.panda:
+		unit_instance = PANDA.instantiate()
+	elif unit_type == enemy_units_enum.gnome:
+		unit_instance = GNOME.instantiate()
+	elif unit_type == enemy_units_enum.spider:
+		unit_instance = SPIDER.instantiate()
 	unit_instance.team = team
 	# initial position should not be in the loose area for any unit
 	unit_instance.position = Vector2(500, 500)
@@ -111,6 +142,7 @@ func spawnUnit(team):
 
 func _on_wave_timer_timeout() -> void:
 	# calculate what units the enemy should spawn using strategic AI
+	wave_counter += 1
 	calculate_enemy_wave_composition()
 	
 	# check if the queue has over 20 units. if so decrease the time between spawning units
@@ -129,10 +161,11 @@ func _on_wave_timer_timeout() -> void:
 	clock_sound_timer.start()
 	sfx_new_wave.play()
 	
-	# Give additional money to you and enemy after wave was summoned
-	enemy_points += 100
-	player_points += 50
-	Singleton.update_points()
+	if wave_counter < 10:
+		# Give additional money to you and enemy after wave was summoned
+		enemy_points += 100
+		player_points += 50
+		Singleton.update_points()
 
 
 func _on_clock_sound_timer_timeout() -> void:
@@ -141,6 +174,11 @@ func _on_clock_sound_timer_timeout() -> void:
 
 func calculate_enemy_wave_composition():
 	var original_points = enemy_points
+	
+	## right now im making enemy monster units so im just spawning those
+	spawn_monster_wave()
+	return
+	
 	
 	# When under 500 points, 50% chance to wait and spawn nothing (only once at a time)
 	if enemy_points < 500 and randf() < 0.5:
@@ -298,6 +336,34 @@ func cancel_unit():
 		var last_unit = player_spawn_queue.pop_back()
 		player_points += units_cost[last_unit]
 
+
+func spawn_monster_wave():
+	
+	##Debugging spiders
+	while enemy_points >= enemy_units_cost.spider:
+		enemy_points -= enemy_units_cost.spider
+		enemy_spawn_queue.append(enemy_units_enum.spider)
+	
+	
+	var target_bears = max(1, int(enemy_points * 0.3 / enemy_units_cost.bear))
+	var target_pandas = max(1, int(enemy_points * 0.3 / enemy_units_cost.panda))
+	var target_gnomes = max(1, int(enemy_points * 0.4 / enemy_units_cost.gnome))
+	
+	for i in target_bears:
+		if enemy_points >= enemy_units_cost.bear:
+			enemy_points -= enemy_units_cost.bear
+			enemy_spawn_queue.append(enemy_units_enum.bear)
+	
+	for i in target_pandas:
+		if enemy_points >= enemy_units_cost.panda:
+			enemy_points -= enemy_units_cost.panda
+			enemy_spawn_queue.append(enemy_units_enum.panda)
+	
+	#spend the rest on GNOOOOMES
+	while enemy_points >= enemy_units_cost.gnome:
+		enemy_points -= enemy_units_cost.gnome
+		enemy_spawn_queue.append(enemy_units_enum.gnome)
+	
 
 func _on_loose_condition_area_body_entered(body: Node2D) -> void:
 	# check if its an enemy
