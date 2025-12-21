@@ -2,7 +2,7 @@ extends StaticBody2D
 
 signal base_destroyed(team: String)
 
-@export var team: String = "player"
+var team: String = "enemy"
 @export var max_health := 1000
 var health :int
 
@@ -10,13 +10,6 @@ var health :int
 func _ready() -> void:
 	
 	health = max_health
-	if team == "player":
-		$EnemyBase.visible = false
-		$PlayerBase.visible = true
-	else:
-		$EnemyBase.visible = true
-		$PlayerBase.visible = false
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

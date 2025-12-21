@@ -1,0 +1,52 @@
+[gd_scene load_steps=8 format=3 uid="uid://vpsnc4y3j7xd"]
+
+[ext_resource type="Script" uid="uid://ctf2euoj26e8a" path="res://cave_base.gd" id="1_aaffm"]
+[ext_resource type="Texture2D" uid="uid://2sjnt8jhpie4" path="res://assets/Terrain/cave_big_outlines.png" id="2_rx0xo"]
+[ext_resource type="PackedScene" uid="uid://bosnny7bm4fbd" path="res://bush_2.tscn" id="3_ynrrx"]
+[ext_resource type="PackedScene" uid="uid://tjqiexchylak" path="res://bush_3.tscn" id="4_cakvn"]
+[ext_resource type="PackedScene" uid="uid://csidsduuujnbj" path="res://bush_1.tscn" id="5_vactt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tpea4"]
+size = Vector2(109, 37)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8rhti"]
+size = Vector2(263, 166)
+
+[node name="EnemyBase" type="StaticBody2D"]
+position = Vector2(0, -29)
+script = ExtResource("1_aaffm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -10)
+shape = SubResource("RectangleShape2D_tpea4")
+
+[node name="CaveEnterance" type="Sprite2D" parent="."]
+position = Vector2(21, -59)
+scale = Vector2(1.10556, 1.10556)
+texture = ExtResource("2_rx0xo")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, -74)
+shape = SubResource("RectangleShape2D_8rhti")
+
+[node name="Node2D2" parent="." instance=ExtResource("3_ynrrx")]
+position = Vector2(115, -31)
+
+[node name="Node2D4" parent="." instance=ExtResource("3_ynrrx")]
+position = Vector2(90, -21)
+
+[node name="Node2D5" parent="." instance=ExtResource("4_cakvn")]
+position = Vector2(185, -29)
+
+[node name="Node2D3" parent="." instance=ExtResource("3_ynrrx")]
+position = Vector2(141, -24)
+
+[node name="Node2D6" parent="." instance=ExtResource("4_cakvn")]
+position = Vector2(-161, -36)
+
+[node name="Node2D" parent="." instance=ExtResource("5_vactt")]
+position = Vector2(-108, -15)

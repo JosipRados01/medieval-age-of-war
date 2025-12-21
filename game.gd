@@ -59,12 +59,20 @@ const units_cost = {
 
 @onready var play_layer: Node2D = $PlayLayer
 @onready var canvas_layer: CanvasLayer = $CanvasLayer
+@onready var player_base = $PlayLayer/PlayerBase
+@onready var enemy_base = $PlayLayer/EnemyBase
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	Singleton.game = self
 	Singleton.update_points()
+	
+	# Connect base destroyed signals
+	if player_base:
+		player_base.base_destroyed.connect(_on_base_destroyed)
+	if enemy_base:
+		enemy_base.base_destroyed.connect(_on_base_destroyed)
 	
 
 
@@ -379,29 +387,42 @@ func spawn_monster_wave():
 	while enemy_points >= units_cost.gnome:
 		enemy_points -= units_cost.gnome
 		enemy_spawn_queue.append(units_enum.gnome)
-	
-
-func _on_loose_condition_area_body_entered(body: Node2D) -> void:
-	# check if its an enemy
-	if body.has_method("_get_team"):
-		var team = body._get_team()
-		if team == "enemy":
-			var win_lose_screen = WIN_LOSE_SCREEN.instantiate()
-			canvas_layer.add_child(win_lose_screen)
-			win_lose_screen.loose_display()
-			get_tree().paused = true
-
-
-func _on_win_condition_area_body_entered(body: Node2D) -> void:
-	# check if its a player unit (win condition)
-	if body.has_method("_get_team"):
-		var team = body._get_team()
-		if team == "player":
-			var win_lose_screen = WIN_LOSE_SCREEN.instantiate()
-			canvas_layer.add_child(win_lose_screen)
-			win_lose_screen.win_display()
-			get_tree().paused = true
+	#
+#
+#func _on_loose_condition_area_body_entered(body: Node2D) -> void:
+	## check if its an enemy
+	#if body.has_method("_get_team"):
+		#var team = body._get_team()
+		#if team == "enemy":
+			#var win_lose_screen = WIN_LOSE_SCREEN.instantiate()
+			#canvas_layer.add_child(win_lose_screen)
+			#win_lose_screen.loose_display()
+			#get_tree().paused = true
+#
+#
+#func _on_win_condition_area_body_entered(body: Node2D) -> void:
+	## check if its a player unit (win condition)
+	#if body.has_method("_get_team"):
+		#var team = body._get_team()
+		#if team == "player":
+			#var win_lose_screen = WIN_LOSE_SCREEN.instantiate()
+			#canvas_layer.add_child(win_lose_screen)
+			#win_lose_screen.win_display()
+			#get_tree().paused = true
 
 
 func get_points_for_unit(unit: String):
 	return units_cost[unit]
+
+func _on_base_destroyed(destroyed_team: String):
+	var win_lose_screen = WIN_LOSE_SCREEN.instantiate()
+	canvas_layer.add_child(win_lose_screen)
+	
+	if destroyed_team == "player":
+		# Player base destroyed = player loses
+		win_lose_screen.loose_display()
+	else:
+		# Enemy base destroyed = player wins
+		win_lose_screen.win_display()
+	
+	get_tree().paused = true
