@@ -15,8 +15,6 @@ var can_attack_again_timer
 var movement_speed := 100
 # "player" | "enemy"
 @export var team := "player"
-# how many points the unit is worth on death
-var points = 40
 
 var is_combat_mode: bool = false
 var is_attacking: bool = false
@@ -36,6 +34,12 @@ var target_offset := 0.0
 var current_target_position = null
 var reposition_timer = 0
 var reposition_interval = 100  # frames
+
+## poison variables
+var is_poisoned = false
+var poison_damage = 30
+var poison_ticks_remaining = 0
+var poison_timer = 0.0
 
 
 # Called when the node enters the scene tree for the first time.
@@ -60,6 +64,10 @@ func _process(delta: float) -> void:
 	
 	#always update attack timer
 	update_attack_timer()
+	
+	# update poison timer if poisoned
+	if is_poisoned:
+		_update_poison(delta)
 	
 	is_combat_mode = check_combat_mode()
 	# The unit can either be in combat or moving
@@ -226,7 +234,7 @@ func take_damage(damage:int):
 
 
 func die():
-	Singleton.add_points(team, points)
+	Singleton.add_points(team, "knight")
 	death_particles.reparent(get_parent())
 	death_particles.emitting = true
 	death_particles.connect("finished", Callable(self, "_on_death_particles_finished"))
@@ -263,3 +271,36 @@ func _on_hurtbox_area_shape_entered(area_rid: RID, area: Area2D, area_shape_inde
 			var target_team = parent._get_team()
 			if(target_team != team and parent.has_method("take_damage")):
 				parent.take_damage(damage)
+
+
+func get_poisoned():
+	if is_poisoned:
+		# Reset the poison if already poisoned
+		poison_ticks_remaining = 3
+		poison_timer = 0.0
+	else:
+		is_poisoned = true
+		poison_ticks_remaining = 3
+		poison_timer = 0.0
+		# Apply green tint
+		animated_sprite.modulate = Color(0.5, 1.0, 0.5)
+		# Reduce movement speed by half
+		movement_speed *= 0.5
+
+func _update_poison(delta):
+	poison_timer += delta
+	
+	# Deal damage every 1 second
+	if poison_timer >= 1.0:
+		poison_timer -= 1.0
+		take_damage(poison_damage)
+		poison_ticks_remaining -= 1
+		
+		# Check if poison effect is over
+		if poison_ticks_remaining <= 0:
+			is_poisoned = false
+			poison_timer = 0.0
+			# Remove green tint
+			animated_sprite.modulate = Color(1.0, 1.0, 1.0)
+			# Restore movement speed
+			movement_speed *= 2.0

@@ -2,21 +2,22 @@ extends Node2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: CollisionShape2D = $Hitbox/CollisionShape2D
+@onready var hitbox_area: Area2D = $Hitbox
 @onready var hurtbox: CollisionShape2D = $Hurtbox/CollisionShape2D
+@onready var hurtbox_area: Area2D = $Hurtbox
+@onready var poison_area: Area2D = $poisonArea
 @onready var enemyDetector: Area2D = $EnemyDetector
 @onready var enemy_in_range: Area2D = $Enemy_in_range
 @onready var point_on_path : PathFollow2D = $"../../Path/point_on_path"
 @onready var death_particles: CPUParticles2D = $DeathParticles
 
-@export var health := 150
-const max_health = 150
+@export var health := 180
+const max_health = 180
 var damage := 30
 var can_attack_again_timer
-var movement_speed := 220
+var movement_speed := 200
 # "player" | "enemy"
 @export var team := "enemy"
-# how many points the unit is worth on death
-var points = 50
 
 var is_combat_mode: bool = false
 var is_attacking: bool = false
@@ -147,11 +148,49 @@ func move_on_path(delta):
 	progress_on_path_precentage = point_on_path.progress_ratio
 
 	var target := point_on_path.position
+	
+	# Apply collision avoidance - push away from overlapping units
+	var separation_force = _calculate_separation_force()
+	target += separation_force
+	
 	position = position.move_toward(target, movement_speed * delta)
 	
 	#play the move animation
 	animated_sprite.play("move")
 	_update_offset(delta)
+
+func _calculate_separation_force() -> Vector2:
+	# Get all overlapping bodies in the hitbox
+	var overlapping_bodies = hitbox_area.get_overlapping_bodies()
+	if overlapping_bodies.size() == 0:
+		return Vector2.ZERO
+	
+	var separation = Vector2.ZERO
+	var neighbor_count = 0
+	
+	for body in overlapping_bodies:
+		# Skip self
+		if body == self:
+			continue
+			
+		# Calculate direction away from this neighbor
+		var distance_vec = position - body.position
+		var distance = distance_vec.length()
+		
+		# Only apply separation if very close (to avoid constant pushing)
+		if distance > 0 and distance < 60:  # adjust threshold as needed
+			# Closer neighbors have stronger influence
+			var push_strength = (60 - distance) / 60.0
+			separation += distance_vec.normalized() * push_strength
+			neighbor_count += 1
+	
+	# Average the separation force
+	if neighbor_count > 0:
+		separation = separation / neighbor_count
+		# Scale the separation force (adjust multiplier as needed)
+		separation *= 40.0
+	
+	return separation
 
 func _update_offset(delta):
 	# occasionally pick a new random offset
@@ -188,11 +227,22 @@ func take_damage(damage:int):
 
 
 func die():
-	Singleton.add_points(team, points)
+	Singleton.add_points(team, "spider")
 	death_particles.reparent(get_parent())
 	death_particles.emitting = true
 	death_particles.connect("finished", Callable(self, "_on_death_particles_finished"))
 	Singleton.play_death_sound(position)
+	
+	# spiders have acid blood that hurts the units one last time
+	var overlapping_areas = poison_area.get_overlapping_areas()
+	for area in overlapping_areas:
+		if area.name == "Hitbox":
+			var enemy = area.get_parent()
+			if enemy.has_method("_get_team"):
+				var enemy_team = enemy._get_team()
+				if enemy_team != team and enemy.has_method("get_poisoned"):
+					enemy.get_poisoned()
+	
 	queue_free()
 
 func _on_death_particles_finished():
@@ -220,3 +270,5 @@ func _on_hurtbox_area_shape_entered(area_rid: RID, area: Area2D, area_shape_inde
 			var target_team = parent._get_team()
 			if(target_team != team and parent.has_method("take_damage")):
 				parent.take_damage(damage)
+				if parent.has_method("get_poisoned"):
+					parent.get_poisoned()

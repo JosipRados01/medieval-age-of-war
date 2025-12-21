@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://b8bi1pom5ki2q"]
+[gd_scene load_steps=37 format=3 uid="uid://b8bi1pom5ki2q"]
 
 [ext_resource type="Script" uid="uid://b1fsnlix8rmpm" path="res://spider.gd" id="1_bsryr"]
 [ext_resource type="Texture2D" uid="uid://c5biyknftlm6t" path="res://assets/Tiny Swords (Enemy Pack)/Enemy Pack/Spider/Spider_Attack.png" id="2_01nvu"]
@@ -181,8 +181,8 @@ radius = 31.0
 height = 62.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_d44od"]
-radius = 8.9898
-height = 22.9739
+radius = 14.0337
+height = 28.9671
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_1e0fq"]
 radius = 240.008
@@ -199,6 +199,9 @@ stream_0/stream = ExtResource("5_x2avr")
 stream_1/stream = ExtResource("6_swjsr")
 stream_2/stream = ExtResource("7_l1y2r")
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_bsryr"]
+radius = 76.0
+
 [node name="Spider" type="CharacterBody2D"]
 script = ExtResource("1_bsryr")
 
@@ -208,10 +211,12 @@ shape = SubResource("CircleShape2D_w3f4p")
 debug_color = Color(0, 0.647416, 0.21166, 0.42)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(5, 1.90735e-06)
+position = Vector2(5, 6.77626e-21)
 scale = Vector2(0.7, 0.7)
 sprite_frames = SubResource("SpriteFrames_tcn2r")
 animation = &"attack"
+frame = 7
+frame_progress = 1.0
 
 [node name="Hitbox" type="Area2D" parent="."]
 collision_layer = 2
@@ -226,7 +231,7 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
-position = Vector2(51, 14)
+position = Vector2(50, 12)
 rotation = 1.5708
 scale = Vector2(1.71017, 2.00227)
 shape = SubResource("CapsuleShape2D_d44od")
@@ -251,20 +256,19 @@ shape = SubResource("CapsuleShape2D_tttt7")
 
 [node name="DeathParticles" type="CPUParticles2D" parent="."]
 emitting = false
-amount = 70
-lifetime = 0.5
+amount = 100
+lifetime = 0.6
 one_shot = true
 explosiveness = 0.76
-lifetime_randomness = 0.48
+lifetime_randomness = 0.6
 emission_shape = 1
 emission_sphere_radius = 15.0
-direction = Vector2(-0.3, -1)
-initial_velocity_min = 201.1
-initial_velocity_max = 330.23
-scale_amount_min = 2.0
-scale_amount_max = 4.0
-color = Color(0.745098, 0.2, 0.141176, 1)
-hue_variation_max = 0.4
+direction = Vector2(0.5, -1)
+initial_velocity_min = 278.23
+initial_velocity_max = 404.7
+scale_amount_min = 3.0
+scale_amount_max = 5.0
+color = Color(0.217386, 0.494768, 0.227844, 1)
 
 [node name="sfx_attack" type="AudioStreamPlayer2D" parent="."]
 unique_name_in_owner = true
@@ -272,6 +276,12 @@ stream = SubResource("AudioStreamRandomizer_5egws")
 volume_db = -15.0
 pitch_scale = 1.5
 max_polyphony = 2
+
+[node name="poisonArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="poisonArea"]
+position = Vector2(44, -7)
+shape = SubResource("CircleShape2D_bsryr")
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="frame_changed" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_frame_changed"]

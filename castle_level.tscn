@@ -1158,7 +1158,7 @@ tile_set = SubResource("TileSet_1svrf")
 [node name="CanvasLayer" parent="." instance=ExtResource("18_iueoy")]
 
 [node name="WaveTimer" type="Timer" parent="."]
-wait_time = 5.0
+wait_time = 15.0
 autostart = true
 
 [node name="clockSoundTimer" type="Timer" parent="."]
@@ -1177,7 +1177,7 @@ shape = SubResource("CircleShape2D_josv7")
 position = Vector2(-40, -455)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Loose_condition_area"]
-position = Vector2(18, 9)
+position = Vector2(7, 27)
 shape = SubResource("CircleShape2D_nk4qf")
 
 [connection signal="timeout" from="WaveTimer" to="." method="_on_wave_timer_timeout"]

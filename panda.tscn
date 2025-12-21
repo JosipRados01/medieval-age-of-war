@@ -281,7 +281,7 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
-position = Vector2(52, 13)
+position = Vector2(52, 8)
 rotation = 1.5708
 scale = Vector2(1.71017, 2.00227)
 shape = SubResource("CapsuleShape2D_ijhuk")
@@ -300,7 +300,7 @@ position = Vector2(-2, 0)
 collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Enemy_in_range"]
-position = Vector2(60, 13)
+position = Vector2(50, 7)
 rotation = 1.5708
 shape = SubResource("CapsuleShape2D_m2oxb")
 

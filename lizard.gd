@@ -1,29 +1,31 @@
 extends Node2D
 
-var animated_sprite: AnimatedSprite2D
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var hitbox: CollisionShape2D = $Hitbox/CollisionShape2D
-@onready var hurtbox_side: CollisionShape2D = $Hurtbox_side/CollisionShape2D
-@onready var hurtbox_up_side: CollisionShape2D = $Hurtbox_up_side/CollisionShape2D
-@onready var hurtbox_down_side: CollisionShape2D = $Hurtbox_down_side/CollisionShape2D
+@onready var hurtbox: CollisionShape2D = $Hurtbox/CollisionShape2D
 @onready var enemyDetector: Area2D = $EnemyDetector
-@onready var enemy_in_range_side: Area2D = $Enemy_in_range_side
-@onready var enemy_in_range_up_side: Area2D = $Enemy_in_range_up_side
-@onready var enemy_in_range_down_side: Area2D = $Enemy_in_range_down_side
+@onready var enemy_in_range: Area2D = $Enemy_in_range
 @onready var point_on_path : PathFollow2D = $"../../Path/point_on_path"
 @onready var death_particles: CPUParticles2D = $DeathParticles
 
-@export var health := 200
-const max_health = 200
+const SPIT_BALL = preload("res://spit_ball.tscn")
+
+@export var health := 250
+const max_health = 250
 var damage := 40
 var can_attack_again_timer
-var movement_speed := 200
+var movement_speed := 120
 # "player" | "enemy"
-@export var team := "player"
+@export var team := "enemy"
 
 var is_combat_mode: bool = false
 var is_attacking: bool = false
 var can_attack: bool = true
-var attack_cooldown_frames = 20
+var is_spitting: bool = false
+var can_spit: bool = true
+var attack_cooldown_frames = 30
+var spit_cooldown_timer = 0.0
+var spit_cooldown_duration = 0.5
 
 @export var progress_on_path_precentage:float 
 var progress_on_path_pixels := 0.0
@@ -33,36 +35,14 @@ var side_offset := 0.0
 var target_offset := 0.0
 @onready var offset_change_time := 0.0
 
-# repositioning preference for spearman
-var repositioning_preference := "side"
-
-
-## poison variables
-var is_poisoned = false
-var poison_damage = 30
-var poison_ticks_remaining = 0
-var poison_timer = 0.0
-
-
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if team == "enemy":
 		progress_on_path_precentage = 0.99
-		animated_sprite = $EnemyAnimatedSprite2D
-		$AnimatedSprite2D.queue_free()
-	else:
-		animated_sprite = $AnimatedSprite2D
-		$EnemyAnimatedSprite2D.queue_free()
+		scale.x = -1
 
 	point_on_path.progress_ratio = progress_on_path_precentage
 	position = point_on_path.position
-
-	if team == "enemy":
-		scale.x = -1
-	
-	# choose a random preference for attack side
-	repositioning_preference = ["side", "down", "up"].pick_random()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -70,31 +50,32 @@ func _process(delta: float) -> void:
 	
 	#always update attack timer
 	update_attack_timer()
-	
-	# update poison timer if poisoned
-	if is_poisoned:
-		_update_poison(delta)
+	update_spit_timer(delta)
 	
 	is_combat_mode = check_combat_mode()
 	# The unit can either be in combat or moving
 	if(is_combat_mode):
 		# if attacking do nothing
-		if(is_attacking):
+		if(is_attacking or is_spitting):
 			pass
 		else:
-			#check for nearby enemies and if an enemy is close enough attack
-			if(can_attack and should_unit_attack()):
-				# init attack animation
-				start_attack_animation()
+			if can_spit:
+				start_spit_animation()
 			else:
-				#reposition according to enemy. Ideal position for knight is in front of the enemy and in range for attack
-				reposition(delta)
+				#check for nearby enemies and if an enemy is close enough attack
+				if(can_attack and should_unit_attack()):
+					# init attack animation
+					start_attack_animation()
+				else:
+					#reposition according to enemy. Ideal position for knight is in front of the enemy and in range for attack
+					reposition(delta)
 	else:
-		#TODO: add a check for is attacking and skip the moving if so
-		# reset the variables to make sure that we don't get stuck
-		is_attacking = false
-		#continue following the path
-		move_on_path(delta)
+		#THIS MAY CAUSE IT TO GET STUCK IF HE KILLS ALL ENEMIES
+		if(is_attacking or is_spitting):
+			pass
+		else:
+			#continue following the path
+			move_on_path(delta)
 
 func get_enemies_detected():
 	var enemies = []
@@ -115,9 +96,7 @@ func check_combat_mode() -> bool:
 
 func should_unit_attack() -> bool:
 	# the unit should attack if the Enemy_in_range area has enemies in the enemy team
-	var overlaping = enemy_in_range_side.get_overlapping_bodies()
-	overlaping.append_array(enemy_in_range_up_side.get_overlapping_bodies())
-	overlaping.append_array(enemy_in_range_down_side.get_overlapping_bodies())
+	var overlaping = enemy_in_range.get_overlapping_bodies()
 	for enemy in overlaping:
 		if (enemy.has_method("_get_team")):
 			var enemy_team = enemy._get_team()
@@ -128,22 +107,10 @@ func should_unit_attack() -> bool:
 func _get_team():
 	return team
 
-func are_enemies_in_array(array):
-	for enemy in array:
-		if (enemy.has_method("_get_team")):
-			var enemy_team = enemy._get_team()
-			if team != enemy_team:
-				return true
-	return false
 
 func start_attack_animation():
 	is_attacking = true
-	if(are_enemies_in_array(enemy_in_range_side.get_overlapping_bodies())):
-		animated_sprite.play("attack_side")
-	elif(are_enemies_in_array(enemy_in_range_up_side.get_overlapping_bodies())):
-		animated_sprite.play("attack_up_side")
-	else:
-		animated_sprite.play("attack_down_side")
+	animated_sprite.play("attack")
 	
 func reposition(delta):
 	if(can_attack):
@@ -164,11 +131,6 @@ func reposition(delta):
 	var targetPosition = chosen_enemy.position
 	var reposition_distance_x = 70 
 	var reposition_distance_y = 0
-	
-	if repositioning_preference == "up":
-		reposition_distance_y = 40
-	elif repositioning_preference == "down":
-		reposition_distance_y = -40
 
 	if(team == "player"):
 		targetPosition.x -= reposition_distance_x
@@ -203,11 +165,11 @@ func _update_offset(delta):
 	# occasionally pick a new random offset
 	offset_change_time -= delta
 	if offset_change_time <= 0.0:
-		target_offset = randf_range(-50, 50)  # random left/right range
-		offset_change_time = randf_range(0.5, 2.0)  # how often to change direction
+		target_offset = randf_range(-70, 70)  # random left/right range
+		offset_change_time = randf_range(0.5, 1.0)  # how often to change direction
 
 	# smoothly move toward that offset
-	side_offset = lerp(side_offset, target_offset, 0.05)
+	side_offset = lerp(side_offset, target_offset, 0.1)
 
 	# apply it to PathFollow2D
 	point_on_path.v_offset = side_offset
@@ -234,7 +196,7 @@ func take_damage(damage:int):
 
 
 func die():
-	Singleton.add_points(team, "spearman")
+	Singleton.add_points(team, "gnome")
 	death_particles.reparent(get_parent())
 	death_particles.emitting = true
 	death_particles.connect("finished", Callable(self, "_on_death_particles_finished"))
@@ -247,21 +209,17 @@ func _on_death_particles_finished():
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if(is_attacking):
 		end_attack()
+	if is_spitting:
+		end_spit()
 
 
 func _on_animated_sprite_2d_frame_changed() -> void:
-	if animated_sprite.animation == "attack_side" :
-		hurtbox_side.disabled = animated_sprite.frame != 1
-		if(animated_sprite.frame == 1):
+	if animated_sprite.animation == "attack" :
+		hurtbox.disabled = !(animated_sprite.frame == 2 or animated_sprite.frame == 4 or animated_sprite.frame == 6)
+		if(animated_sprite.frame == 2):
 			%sfx_attack.play()
-	elif animated_sprite.animation == "attack_up_side" :
-		hurtbox_up_side.disabled = animated_sprite.frame != 1
-	elif animated_sprite.animation == "attack_down_side":
-		hurtbox_down_side.disabled = animated_sprite.frame != 1
 	else:
-		hurtbox_side.disabled = true
-		hurtbox_up_side.disabled = true
-		hurtbox_down_side.disabled = true
+		hurtbox.disabled = true
 
 
 func _on_hurtbox_area_shape_entered(area_rid: RID, area: Area2D, area_shape_index: int, local_shape_index: int) -> void:
@@ -274,36 +232,91 @@ func _on_hurtbox_area_shape_entered(area_rid: RID, area: Area2D, area_shape_inde
 				parent.take_damage(damage)
 
 
+func start_spit_animation():
+	is_spitting = true
+	can_spit = false
+	animated_sprite.play("spit")
+	spit_spit_ball()
 
 
-func get_poisoned():
-	if is_poisoned:
-		# Reset the poison if already poisoned
-		poison_ticks_remaining = 3
-		poison_timer = 0.0
+
+func get_farthest_enemy(to_position: Vector2, enemies: Array) -> Node2D:
+	if enemies.is_empty():
+		return null
+
+	var farthest = enemies[0]
+	var farthest_dist = to_position.distance_to(farthest.position)
+
+	for e in enemies:
+		var d = to_position.distance_to(e.position)
+		if d > farthest_dist:
+			farthest = e
+			farthest_dist = d
+
+	return farthest
+
+
+func spit_spit_ball():
+	var enemies = get_enemies_detected()
+	if enemies.is_empty():
+		return
+
+	var start = global_position 
+	start.y -= 50
+	#var target = get_farthest_enemy(start, enemies)
+	var target = enemies[randi() % enemies.size()]
+	var end = target.global_position
+
+	# ---- SETTINGS ----
+	var g = 5000.0               # gravity
+	var extra_height = 100.0     # how high above the higher point the apex should be
+
+	# ---- TRAJECTORY CALCULATION ----
+	var dx = end.x - start.x
+	var dy = end.y - start.y
+
+	# choose apex height
+	var apex_y = min(start.y, end.y) - extra_height
+
+	# vertical velocities
+	var vy_up = sqrt(2.0 * g * (start.y - apex_y))
+	var vy_down = sqrt(2.0 * g * (end.y - apex_y))
+
+	# times for vertical travel
+	var t_up = vy_up / g
+	var t_down = vy_down / g
+	var total_t = t_up + t_down     # total flight time
+
+	# horizontal velocity needed to land exactly on target
+	var vx = dx / total_t
+
+	# pick upward velocity
+	var vy = -vy_up
+
+	# enemy team reversal
+	if team == "enemy":
+		vx = -abs(vx)
 	else:
-		is_poisoned = true
-		poison_ticks_remaining = 3
-		poison_timer = 0.0
-		# Apply green tint
-		animated_sprite.modulate = Color(0.5, 1.0, 0.5)
-		# Reduce movement speed by half
-		movement_speed *= 0.5
+		vx = abs(vx)
 
-func _update_poison(delta):
-	poison_timer += delta
-	
-	# Deal damage every 1 second
-	if poison_timer >= 1.0:
-		poison_timer -= 1.0
-		take_damage(poison_damage)
-		poison_ticks_remaining -= 1
-		
-		# Check if poison effect is over
-		if poison_ticks_remaining <= 0:
-			is_poisoned = false
-			poison_timer = 0.0
-			# Remove green tint
-			animated_sprite.modulate = Color(1.0, 1.0, 1.0)
-			# Restore movement speed
-			movement_speed *= 2.0
+	# ---- SPAWN ARROW ----
+	var spit = SPIT_BALL.instantiate()
+	spit.position = start
+	spit.gravity = g
+	spit.velocity = Vector2(vx, vy)
+	spit.team = team
+	spit.damage = damage
+	spit.max_y = end.y + 50
+	get_parent().add_child(spit)
+	#%sfx_shoot.play()
+
+func end_spit():
+	is_spitting = false
+	spit_cooldown_timer = spit_cooldown_duration
+	animated_sprite.play("move")
+
+func update_spit_timer(delta):
+	if spit_cooldown_timer > 0:
+		spit_cooldown_timer -= delta
+		if spit_cooldown_timer <= 0:
+			can_spit = true

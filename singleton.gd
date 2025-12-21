@@ -5,11 +5,11 @@ var game_ui
 
 const DEATH_SOUND = preload("res://death_sound.tscn")
 
-func add_points(team:String, points:int):
+func add_points(team:String, unit:String):
 	if(team == "player"):
-		game.enemy_points += points
+		game.enemy_points += game.get_points_for_unit(unit)
 	else:
-		game.player_points += points
+		game.player_points += game.get_points_for_unit(unit)
 	
 	game_ui.update_points(game.player_points)
 

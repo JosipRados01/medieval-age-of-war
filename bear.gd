@@ -10,13 +10,11 @@ extends Node2D
 
 @export var health := 800
 const max_health = 800
-var damage := 90
+var damage := 200
 var can_attack_again_timer
-var movement_speed := 120
+var movement_speed := 90
 # "player" | "enemy"
 @export var team := "enemy"
-# how many points the unit is worth on death
-var points = 150
 
 var is_combat_mode: bool = false
 var is_attacking: bool = false
@@ -188,7 +186,7 @@ func take_damage(damage:int):
 
 
 func die():
-	Singleton.add_points(team, points)
+	Singleton.add_points(team, "bear")
 	death_particles.reparent(get_parent())
 	death_particles.emitting = true
 	death_particles.connect("finished", Callable(self, "_on_death_particles_finished"))

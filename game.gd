@@ -26,6 +26,7 @@ const BEAR = preload("res://bear.tscn")
 const PANDA = preload("res://panda.tscn")
 const GNOME = preload("res://gnome.tscn")
 const SPIDER = preload("res://spider.tscn")
+const LIZARD = preload("res://lizard.tscn")
 
 
 @onready var sfx_new_wave: AudioStreamPlayer2D = %sfx_new_wave
@@ -36,28 +37,24 @@ const units_enum = {
 	"knight": "knight",
 	"archer": "archer",
 	"spearman": "spearman",
-	"healer": "healer"
-}
-
-const enemy_units_enum = {
+	"healer": "healer",
 	"bear": "bear",
 	"panda": "panda",
 	"gnome": "gnome",
-	"spider": "spider"
-}
-
-const enemy_units_cost = {
-	"bear": 150,
-	"panda": 80,
-	"gnome": 30,
-	"spider": 30
+	"spider": "spider",
+	"lizard": "lizard"
 }
 
 const units_cost = {
 	"knight": 30,
-	"spearman": 60,
+	"spearman": 50,
 	"archer": 80,
 	"healer": 100,
+	"bear": 130,
+	"panda": 70,
+	"gnome": 30,
+	"spider": 40,
+	"lizard": 90
 }
 
 @onready var play_layer: Node2D = $PlayLayer
@@ -126,17 +123,21 @@ func spawnUnit(team):
 	elif unit_type == units_enum.healer:
 		unit_instance = HEALER.instantiate()
 	## ENEMY UNITS
-	elif unit_type == enemy_units_enum.bear:
+	elif unit_type == units_enum.bear:
 		unit_instance = BEAR.instantiate()
-	elif unit_type == enemy_units_enum.panda:
+	elif unit_type == units_enum.panda:
 		unit_instance = PANDA.instantiate()
-	elif unit_type == enemy_units_enum.gnome:
+	elif unit_type == units_enum.gnome:
 		unit_instance = GNOME.instantiate()
-	elif unit_type == enemy_units_enum.spider:
+	elif unit_type == units_enum.spider:
 		unit_instance = SPIDER.instantiate()
+	elif unit_type == units_enum.lizard:
+		unit_instance = LIZARD.instantiate()
 	unit_instance.team = team
 	# initial position should not be in the loose area for any unit
 	unit_instance.position = Vector2(500, 500)
+	# just a little  movement speed variance
+	unit_instance.movement_speed += randi_range(-4,4)
 	play_layer.add_child(unit_instance)
 
 
@@ -148,6 +149,8 @@ func _on_wave_timer_timeout() -> void:
 	# check if the queue has over 20 units. if so decrease the time between spawning units
 	if player_spawn_queue.size() > 20:
 		spawn_interval = 10
+	else:
+		spawn_interval = 30
 	
 	# start wave
 	# empty both arrays and move them to the next wave
@@ -340,29 +343,42 @@ func cancel_unit():
 func spawn_monster_wave():
 	
 	##Debugging spiders
-	while enemy_points >= enemy_units_cost.spider:
-		enemy_points -= enemy_units_cost.spider
-		enemy_spawn_queue.append(enemy_units_enum.spider)
+	#while enemy_points >= enemy_units_cost.spider:
+		#enemy_points -= enemy_units_cost.spider
+		#enemy_spawn_queue.append(units_enum.spider)
 	
 	
-	var target_bears = max(1, int(enemy_points * 0.3 / enemy_units_cost.bear))
-	var target_pandas = max(1, int(enemy_points * 0.3 / enemy_units_cost.panda))
-	var target_gnomes = max(1, int(enemy_points * 0.4 / enemy_units_cost.gnome))
+	var target_bears = max(1, int(enemy_points * 0.2 / units_cost.bear))
+	var target_lizards = max(1, int(enemy_points * 0.3 / units_cost.lizard))
+	var target_pandas = max(1, int(enemy_points * 0.2 / units_cost.panda))
+	var target_gnomes = max(1, int(enemy_points * 0.1 / units_cost.gnome))
+	var target_spiders = max(1, int(enemy_points * 0.2 / units_cost.spider))
 	
+	
+	for i in target_lizards:
+		if enemy_points >= units_cost.lizard:
+			enemy_points -= units_cost.lizard
+			enemy_spawn_queue.append(units_enum.lizard)
+
 	for i in target_bears:
-		if enemy_points >= enemy_units_cost.bear:
-			enemy_points -= enemy_units_cost.bear
-			enemy_spawn_queue.append(enemy_units_enum.bear)
+		if enemy_points >= units_cost.bear:
+			enemy_points -= units_cost.bear
+			enemy_spawn_queue.append(units_enum.bear)
+
+	for i in target_spiders:
+		if enemy_points >= units_cost.spider:
+			enemy_points -= units_cost.spider
+			enemy_spawn_queue.append(units_enum.spider)
 	
 	for i in target_pandas:
-		if enemy_points >= enemy_units_cost.panda:
-			enemy_points -= enemy_units_cost.panda
-			enemy_spawn_queue.append(enemy_units_enum.panda)
+		if enemy_points >= units_cost.panda:
+			enemy_points -= units_cost.panda
+			enemy_spawn_queue.append(units_enum.panda)
 	
 	#spend the rest on GNOOOOMES
-	while enemy_points >= enemy_units_cost.gnome:
-		enemy_points -= enemy_units_cost.gnome
-		enemy_spawn_queue.append(enemy_units_enum.gnome)
+	while enemy_points >= units_cost.gnome:
+		enemy_points -= units_cost.gnome
+		enemy_spawn_queue.append(units_enum.gnome)
 	
 
 func _on_loose_condition_area_body_entered(body: Node2D) -> void:
@@ -385,3 +401,7 @@ func _on_win_condition_area_body_entered(body: Node2D) -> void:
 			canvas_layer.add_child(win_lose_screen)
 			win_lose_screen.win_display()
 			get_tree().paused = true
+
+
+func get_points_for_unit(unit: String):
+	return units_cost[unit]
