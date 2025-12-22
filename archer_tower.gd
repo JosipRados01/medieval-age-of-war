@@ -117,11 +117,11 @@ func shoot_arrow():
 	#we assume the enemy will move a bit 
 	end.x -= 20
 	
-	turn_towards_enemy(end)
+	turn_towards_enemy(end, animated_sprite)
 
 	# ---- SETTINGS ----
 	var g = 5000.0               # gravity
-	var extra_height = 10.0     # how high above the higher point the apex should be
+	var extra_height = 100.0     # how high above the higher point the apex should be
 
 	# ---- TRAJECTORY CALCULATION ----
 	var dx = end.x - start.x
@@ -161,11 +161,11 @@ func shoot_arrow():
 	get_parent().add_child(arrow)
 	%sfx_shoot.play()
 
-func turn_towards_enemy(target):
+func turn_towards_enemy(target, archer_sprite: AnimatedSprite2D):
 	if target.x < global_position.x:
-		scale.x = -1
+		archer_sprite.flip_h = true
 	else:
-		scale.x = 1
+		archer_sprite.flip_h = false
 
 func idle():
 	animated_sprite.play("idle")

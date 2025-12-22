@@ -1,4 +1,4 @@
-[gd_scene load_steps=156 format=4 uid="uid://w6bq6emfia1s"]
+[gd_scene load_steps=157 format=4 uid="uid://w6bq6emfia1s"]
 
 [ext_resource type="Script" uid="uid://bopg7e1114qjl" path="res://game.gd" id="1_odssq"]
 [ext_resource type="Script" uid="uid://tqp1vya0o7ob" path="res://CameraController.gd" id="2_qx8kf"]
@@ -22,7 +22,8 @@
 [ext_resource type="Texture2D" uid="uid://besuelem2kmpb" path="res://assets/Decorations/Bushes/Bushe4.png" id="17_echox"]
 [ext_resource type="PackedScene" uid="uid://bh31qvhyy6jq2" path="res://game_ui.tscn" id="18_iueoy"]
 [ext_resource type="PackedScene" uid="uid://h573bvr065gu" path="res://archer_tower.tscn" id="22_1lw26"]
-[ext_resource type="PackedScene" uid="uid://b761g8dkymqo5" path="res://twin_archer_tower.tscn" id="22_q41wq"]
+[ext_resource type="PackedScene" uid="uid://82odtnkblmd" path="res://quad_archer_tower.tscn" id="22_q41wq"]
+[ext_resource type="PackedScene" uid="uid://de22aypfocnox" path="res://bear.tscn" id="23_jssch"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_aumy3"]
 load_path = "res://.godot/imported/Water Background color.png-f9ae999db1af7226824cc1859e4db7ee.ctex"
@@ -1163,10 +1164,15 @@ tile_set = SubResource("TileSet_1svrf")
 position = Vector2(2113, -636)
 
 [node name="Archer_tower" parent="PlayLayer" instance=ExtResource("22_1lw26")]
+visible = false
 position = Vector2(2718, -445)
 
-[node name="Twin_archer_tower" parent="PlayLayer" instance=ExtResource("22_q41wq")]
-position = Vector2(3323, -594)
+[node name="Quad_archer_tower" parent="PlayLayer" instance=ExtResource("22_q41wq")]
+visible = false
+position = Vector2(3290, -631)
+
+[node name="Bear" parent="PlayLayer" instance=ExtResource("23_jssch")]
+position = Vector2(2065, -612)
 
 [node name="CanvasLayer" parent="." instance=ExtResource("18_iueoy")]
 

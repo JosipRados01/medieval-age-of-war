@@ -100,9 +100,9 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 
 func _on_animated_sprite_2d_frame_changed() -> void:
 	if animated_sprite1.animation == "shoot" and animated_sprite1.frame == 5:
-		shoot_arrow($shootLocation1)
+		shoot_arrow($shootLocation1, animated_sprite1)
 	if animated_sprite2.animation == "shoot" and animated_sprite2.frame == 5:
-		shoot_arrow($shootLocation2)
+		shoot_arrow($shootLocation2, animated_sprite2)
 
 
 
@@ -120,7 +120,7 @@ func get_most_progressed_enemy(to_position: Vector2, enemies: Array) -> Node2D:
 
 	return target
 
-func shoot_arrow(shoot_location: Marker2D):
+func shoot_arrow(shoot_location: Marker2D, archer_sprite: AnimatedSprite2D):
 	var enemies = get_enemies_detected()
 	if enemies.is_empty():
 		return
@@ -130,10 +130,10 @@ func shoot_arrow(shoot_location: Marker2D):
 	var end = target.global_position
 	end.x -= 20
 	
-	turn_towards_enemy(end)
+	turn_towards_enemy(end, archer_sprite)
 
 	var g = 5000.0
-	var extra_height = 10.0
+	var extra_height = 100.0
 
 	var dx = end.x - start.x
 	var dy = end.y - start.y
@@ -165,11 +165,11 @@ func shoot_arrow(shoot_location: Marker2D):
 	get_parent().add_child(arrow)
 	%sfx_shoot.play()
 
-func turn_towards_enemy(target):
+func turn_towards_enemy(target, archer_sprite: AnimatedSprite2D):
 	if target.x < global_position.x:
-		scale.x = -1
+		archer_sprite.flip_h = true
 	else:
-		scale.x = 1
+		archer_sprite.flip_h = false
 
 func idle():
 	if animated_sprite1.animation != "shoot":
