@@ -6,6 +6,8 @@ var gravity
 var team 
 var damage
 var max_y # when arrow reaches this y it will stop and get stabbed into the ground
+var render_in_front := false # Whether arrow should render in front
+var render_in_front_until # Y position until which to render in front
 var stabbed := false
 var already_hurt_an_enemy = false
 
@@ -18,6 +20,14 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if stabbed:
 		return
+	
+	# Manage z_index based on position
+	if render_in_front and render_in_front_until != null:
+		if position.y >= render_in_front_until:
+			# Arrow has passed the tower, reset z_index
+			z_index = 0
+			render_in_front = false
+	
 	# apply gravity and move the arrow
 	velocity.y += gravity * delta
 	# move

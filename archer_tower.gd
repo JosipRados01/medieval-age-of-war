@@ -153,6 +153,11 @@ func shoot_arrow():
 	# ---- SPAWN ARROW ----
 	var arrow = ARROW.instantiate()
 	arrow.position = start
+	# Only set z_index if target is in front of tower
+	if end.y > global_position.y:
+		arrow.z_index = 1   # Target in front of tower
+		arrow.render_in_front = true
+		arrow.render_in_front_until = global_position.y
 	arrow.gravity = g
 	arrow.velocity = Vector2(vx, vy)
 	arrow.team = team
