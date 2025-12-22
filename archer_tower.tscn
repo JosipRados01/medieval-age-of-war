@@ -1,0 +1,161 @@
+[gd_scene load_steps=25 format=3 uid="uid://h573bvr065gu"]
+
+[ext_resource type="Script" uid="uid://cy48olsqo0lun" path="res://archer_tower.gd" id="1_f114w"]
+[ext_resource type="Texture2D" uid="uid://b31odmhsypppp" path="res://assets/Tiny Swords (Free Pack)/Buildings/Blue Buildings/Tower.png" id="2_7meig"]
+[ext_resource type="Texture2D" uid="uid://8hxw3f6belbd" path="res://assets/Tiny Swords (Free Pack)/Units/Blue Units/Archer/Archer_Idle.png" id="3_kxcgx"]
+[ext_resource type="Texture2D" uid="uid://cxgkk05uqbedj" path="res://assets/Tiny Swords (Free Pack)/Units/Blue Units/Archer/Archer_Shoot.png" id="4_acawp"]
+[ext_resource type="AudioStream" uid="uid://biwlqjg0oxgla" path="res://sound/shoot_1.mp3" id="5_acawp"]
+[ext_resource type="AudioStream" uid="uid://ctrc438b86rhl" path="res://sound/shoot_2.mp3" id="6_3u4wy"]
+[ext_resource type="AudioStream" uid="uid://vscl0sb1da0s" path="res://sound/shoot_3.mp3" id="7_urwb6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3u4wy"]
+atlas = ExtResource("3_kxcgx")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_urwb6"]
+atlas = ExtResource("3_kxcgx")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_at4u2"]
+atlas = ExtResource("3_kxcgx")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3f6ns"]
+atlas = ExtResource("3_kxcgx")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7k8cf"]
+atlas = ExtResource("3_kxcgx")
+region = Rect2(768, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ewtpq"]
+atlas = ExtResource("3_kxcgx")
+region = Rect2(960, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qtw07"]
+atlas = ExtResource("4_acawp")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f5cnk"]
+atlas = ExtResource("4_acawp")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sdg16"]
+atlas = ExtResource("4_acawp")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3khke"]
+atlas = ExtResource("4_acawp")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5njhi"]
+atlas = ExtResource("4_acawp")
+region = Rect2(768, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_77t4h"]
+atlas = ExtResource("4_acawp")
+region = Rect2(960, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mbinm"]
+atlas = ExtResource("4_acawp")
+region = Rect2(1152, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j8hfa"]
+atlas = ExtResource("4_acawp")
+region = Rect2(1344, 0, 192, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_a77a6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3u4wy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_urwb6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_at4u2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3f6ns")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7k8cf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ewtpq")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qtw07")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f5cnk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sdg16")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3khke")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5njhi")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_77t4h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mbinm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j8hfa")
+}],
+"loop": false,
+"name": &"shoot",
+"speed": 12.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_a38vb"]
+radius = 622.065
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_at4u2"]
+random_pitch = 1.61
+random_volume_offset_db = 1.0
+streams_count = 3
+stream_0/stream = ExtResource("5_acawp")
+stream_1/stream = ExtResource("6_3u4wy")
+stream_2/stream = ExtResource("7_urwb6")
+
+[node name="Archer_tower" type="Node2D"]
+script = ExtResource("1_f114w")
+
+[node name="Tower" type="Sprite2D" parent="."]
+position = Vector2(0, -94)
+texture = ExtResource("2_7meig")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -149)
+sprite_frames = SubResource("SpriteFrames_a77a6")
+animation = &"idle"
+
+[node name="enemyDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="enemyDetector"]
+position = Vector2(0, -23)
+shape = SubResource("CircleShape2D_a38vb")
+
+[node name="sfx_shoot" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = SubResource("AudioStreamRandomizer_at4u2")
+volume_db = -10.0
+pitch_scale = 0.9
+
+[node name="shootLocation" type="Marker2D" parent="."]
+position = Vector2(0, -148)
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="frame_changed" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_frame_changed"]
