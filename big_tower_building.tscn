@@ -1,0 +1,50 @@
+[gd_scene load_steps=6 format=3 uid="uid://ckh41mil672t0"]
+
+[ext_resource type="Script" uid="uid://dstlnn7c4gv7w" path="res://big_tower_building.gd" id="1_bjigq"]
+[ext_resource type="Texture2D" uid="uid://dvrvw211nyd6r" path="res://assets/Buildings/Blue Buildings/Castle_Construction.png" id="2_fbicl"]
+[ext_resource type="Texture2D" uid="uid://cqev3x53y60vr" path="res://assets/Buildings/Blue Buildings/Castle.png" id="3_ve686"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bc3a8"]
+radius = 45.5
+height = 278.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_saar7"]
+size = Vector2(277, 183)
+
+[node name="Big tower building" type="Node2D"]
+script = ExtResource("1_bjigq")
+
+[node name="CastleConstruction" type="Sprite2D" parent="."]
+position = Vector2(0, -115)
+texture = ExtResource("2_fbicl")
+
+[node name="Castle" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -109)
+texture = ExtResource("3_ve686")
+
+[node name="AreaConstruction" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaConstruction"]
+position = Vector2(0, -52.5)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_bc3a8")
+
+[node name="AreaTower" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaTower"]
+position = Vector2(-1.5, -98.5)
+shape = SubResource("RectangleShape2D_saar7")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -107.0
+offset_top = -3.0
+offset_right = 101.0
+offset_bottom = 37.0
+text = "Click to build Archer Tower"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[connection signal="input_event" from="AreaConstruction" to="." method="_on_area_construction_input_event"]
+[connection signal="input_event" from="AreaTower" to="." method="_on_area_tower_input_event"]

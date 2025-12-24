@@ -1,5 +1,8 @@
 extends Node2D
 
+# Game mode
+enum GameMode { CLASSIC, WAVES }
+var current_game_mode: GameMode = GameMode.WAVES
 
 var enemy_spawn_queue = []
 var current_enemy_wave = []
@@ -7,9 +10,33 @@ var player_spawn_queue = []
 var current_player_wave = []
 var wave_counter := 0
 var enemy_points = 800
-var player_points = 600
+var player_points = 1600
 var spawn_timer = 0
 var spawn_interval = 30
+
+# Wave mode configuration
+var wave_definitions = [
+	{"points": 200, "strategy": ""},     # Wave 1
+	{"points": 260, "strategy": ""},     # Wave 2
+	{"points": 325, "strategy": ""},     # Wave 3
+	{"points": 395, "strategy": ""},     # Wave 4
+	{"points": 470, "strategy": ""},     # Wave 5
+	{"points": 550, "strategy": ""},     # Wave 6
+	{"points": 635, "strategy": ""},     # Wave 7
+	{"points": 725, "strategy": ""},     # Wave 8
+	{"points": 820, "strategy": ""},     # Wave 9
+	{"points": 920, "strategy": ""},     # Wave 10
+	{"points": 1025, "strategy": ""},    # Wave 11
+	{"points": 1135, "strategy": ""},    # Wave 12
+	{"points": 1250, "strategy": ""},    # Wave 13
+	{"points": 1370, "strategy": ""},    # Wave 14
+	{"points": 1495, "strategy": ""},    # Wave 15
+	{"points": 1625, "strategy": ""},    # Wave 16
+	{"points": 1760, "strategy": ""},    # Wave 17
+	{"points": 1900, "strategy": ""},    # Wave 18
+	{"points": 1950, "strategy": ""},    # Wave 19
+	{"points": 2000, "strategy": ""},    # Wave 20
+]
 
 @onready var clock_sound_timer: Timer = $clockSoundTimer
 @onready var wave_timer: Timer = $WaveTimer
@@ -55,6 +82,13 @@ const units_cost = {
 	"gnome": 30,
 	"spider": 40,
 	"lizard": 90
+}
+
+const tower_cost = {
+	"archer_tower": 350,
+	"twin_archer_tower": 250,
+	"triple_archer_tower": 800,
+	"quad_archer_tower": 350
 }
 
 @onready var play_layer: Node2D = $PlayLayer
@@ -152,7 +186,11 @@ func spawnUnit(team):
 func _on_wave_timer_timeout() -> void:
 	# calculate what units the enemy should spawn using strategic AI
 	wave_counter += 1
-	calculate_enemy_wave_composition()
+	
+	if current_game_mode == GameMode.WAVES:
+		calculate_wave_mode_composition()
+	else:
+		calculate_enemy_wave_composition()
 	
 	# check if the queue has over 20 units. if so decrease the time between spawning units
 	if player_spawn_queue.size() > 20:
@@ -172,15 +210,53 @@ func _on_wave_timer_timeout() -> void:
 	clock_sound_timer.start()
 	sfx_new_wave.play()
 	
-	if wave_counter < 10:
+	# In classic mode, give additional money
+	if current_game_mode == GameMode.CLASSIC and wave_counter < 10:
 		# Give additional money to you and enemy after wave was summoned
 		enemy_points += 100
 		player_points += 50
+		Singleton.update_points()
+	# In waves mode, always give player money
+	elif current_game_mode == GameMode.WAVES:
+		player_points += 75
 		Singleton.update_points()
 
 
 func _on_clock_sound_timer_timeout() -> void:
 	sfx_clock_ticking.play()
+
+
+func calculate_wave_mode_composition():
+	# Get the wave definition for the current wave
+	var wave_index = wave_counter - 1
+	
+	# If we've exceeded defined waves, cap at the last wave's points
+	if wave_index >= wave_definitions.size():
+		# Cap at the final wave's points, don't scale further
+		enemy_points = wave_definitions[wave_definitions.size() - 1]["points"]
+	else:
+		var wave_def = wave_definitions[wave_index]
+		enemy_points = wave_def["points"]
+		
+		# Check if wave has a specific strategy
+		if wave_def["strategy"] != "":
+			# Execute specific strategy if defined
+			match wave_def["strategy"]:
+				"balanced":
+					spawn_balanced_elite_army()
+				"archer_focus":
+					spawn_archer_focused_wave()
+				"knight_rush":
+					spawn_knight_focused_wave()
+				"spearman_swarm":
+					spawn_spearman_focused_wave()
+				_:
+					# Default to monster wave
+					spawn_monster_wave()
+			return
+	
+	# Use default monster wave strategy
+	spawn_monster_wave()
 
 
 func calculate_enemy_wave_composition():
@@ -413,6 +489,16 @@ func spawn_monster_wave():
 
 func get_points_for_unit(unit: String):
 	return units_cost[unit]
+
+func can_afford_tower(tower_type: String) -> bool:
+	return player_points >= tower_cost[tower_type]
+
+func purchase_tower(tower_type: String) -> bool:
+	if can_afford_tower(tower_type):
+		player_points -= tower_cost[tower_type]
+		Singleton.update_points()
+		return true
+	return false
 
 func _on_base_destroyed(destroyed_team: String):
 	var win_lose_screen = WIN_LOSE_SCREEN.instantiate()

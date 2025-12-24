@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://bxcyxalhiad5k"]
+
+[ext_resource type="Script" uid="uid://d3jvrnjonay5j" path="res://small_tower_building.gd" id="1_t4y4r"]
+[ext_resource type="Texture2D" uid="uid://dhkliu55jikb3" path="res://assets/Buildings/Blue Buildings/Tower_Construction.png" id="2_e6a65"]
+[ext_resource type="Texture2D" uid="uid://bfat0ghgqmbiq" path="res://assets/Tiny Swords (Free Pack)/Buildings/Black Buildings/Tower.png" id="2_wj8s5"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5fl4f"]
+radius = 45.025
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_t4y4r"]
+radius = 53.0
+height = 182.0
+
+[node name="Small tower building" type="Node2D"]
+script = ExtResource("1_t4y4r")
+
+[node name="Tower" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -91)
+texture = ExtResource("2_wj8s5")
+
+[node name="TowerConstruction" type="Sprite2D" parent="."]
+position = Vector2(0, -99)
+texture = ExtResource("2_e6a65")
+
+[node name="AreaConstruction" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaConstruction"]
+position = Vector2(0, -38.5)
+shape = SubResource("CircleShape2D_5fl4f")
+
+[node name="AreaTower" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AreaTower"]
+position = Vector2(1, -83)
+shape = SubResource("CapsuleShape2D_t4y4r")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -107.0
+offset_top = -3.0
+offset_right = 101.0
+offset_bottom = 37.0
+text = "Click to build Archer Tower"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[connection signal="input_event" from="AreaConstruction" to="." method="_on_area_construction_input_event"]
+[connection signal="input_event" from="AreaTower" to="." method="_on_area_tower_input_event"]

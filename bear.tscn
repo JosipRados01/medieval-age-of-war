@@ -218,10 +218,12 @@ debug_color = Color(0, 0.647416, 0.21166, 0.42)
 position = Vector2(1, -16)
 scale = Vector2(1.17188, 1.17188)
 sprite_frames = SubResource("SpriteFrames_xdpts")
-animation = &"move"
-frame_progress = 0.604261
+animation = &"attack"
+frame = 8
+frame_progress = 1.0
 
 [node name="Hitbox" type="Area2D" parent="."]
+visible = false
 collision_layer = 2
 collision_mask = 0
 
@@ -230,6 +232,7 @@ position = Vector2(2, -14)
 shape = SubResource("CapsuleShape2D_yya65")
 
 [node name="Hurtbox" type="Area2D" parent="."]
+visible = false
 collision_layer = 0
 collision_mask = 2
 
@@ -242,6 +245,7 @@ disabled = true
 debug_color = Color(0.997585, 0, 0.162644, 0.42)
 
 [node name="EnemyDetector" type="Area2D" parent="."]
+visible = false
 collision_layer = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EnemyDetector"]
@@ -249,6 +253,7 @@ position = Vector2(75, 2)
 shape = SubResource("CircleShape2D_0tj32")
 
 [node name="Enemy_in_range" type="Area2D" parent="."]
+visible = false
 position = Vector2(-2, 0)
 collision_layer = 0
 

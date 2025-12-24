@@ -98,9 +98,11 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 	if archer1_finished and archer2_finished:
 		end_attack()
 
-func _on_animated_sprite_2d_frame_changed() -> void:
+func _on_animated_sprite_1_frame_changed() -> void:
 	if animated_sprite1.animation == "shoot" and animated_sprite1.frame == 5:
 		shoot_arrow($shootLocation1, animated_sprite1)
+
+func _on_animated_sprite_2_frame_changed() -> void:
 	if animated_sprite2.animation == "shoot" and animated_sprite2.frame == 5:
 		shoot_arrow($shootLocation2, animated_sprite2)
 
