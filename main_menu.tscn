@@ -72,29 +72,53 @@ Knights
 Commander"
 horizontal_alignment = 1
 
-[node name="Play" type="Control" parent="HBoxContainer/VBoxContainer"]
+[node name="RedKingdom" type="Control" parent="HBoxContainer/VBoxContainer"]
 custom_minimum_size = Vector2(400, 160)
 layout_mode = 2
 
-[node name="PlayButton" type="Button" parent="HBoxContainer/VBoxContainer/Play"]
+[node name="Button" type="Button" parent="HBoxContainer/VBoxContainer/RedKingdom"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -126.0
-offset_top = -66.0
-offset_right = 127.0
-offset_bottom = 67.0
+offset_left = -200.0
+offset_top = -60.5
+offset_right = 200.0
+offset_bottom = 60.5
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("2_fu7sn")
-theme_override_font_sizes/font_size = 100
+theme_override_font_sizes/font_size = 60
 theme_override_styles/hover = SubResource("StyleBoxTexture_wood")
 theme_override_styles/pressed = SubResource("StyleBoxTexture_wood")
 theme_override_styles/normal = SubResource("StyleBoxTexture_wood")
-text = "Play"
+text = "Red Kingdom"
+
+[node name="ForestCreatures" type="Control" parent="HBoxContainer/VBoxContainer"]
+custom_minimum_size = Vector2(400, 160)
+layout_mode = 2
+
+[node name="Button" type="Button" parent="HBoxContainer/VBoxContainer/ForestCreatures"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -225.0
+offset_top = -60.5
+offset_right = 225.0
+offset_bottom = 60.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("2_fu7sn")
+theme_override_font_sizes/font_size = 60
+theme_override_styles/hover = SubResource("StyleBoxTexture_wood")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_wood")
+theme_override_styles/normal = SubResource("StyleBoxTexture_wood")
+text = "Forest Creatures"
 
 [node name="Tutorial" type="Control" parent="HBoxContainer/VBoxContainer"]
 visible = false
@@ -121,5 +145,6 @@ theme_override_styles/pressed = SubResource("StyleBoxTexture_wood")
 theme_override_styles/normal = SubResource("StyleBoxTexture_wood")
 text = "Tutorial"
 
-[connection signal="pressed" from="HBoxContainer/VBoxContainer/Play/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/RedKingdom/Button" to="." method="_on_red_kingdom_button_pressed"]
+[connection signal="pressed" from="HBoxContainer/VBoxContainer/ForestCreatures/Button" to="." method="_on_forest_creatures_button_pressed"]
 [connection signal="pressed" from="HBoxContainer/VBoxContainer/Tutorial/TutorialButton" to="." method="_on_tutorial_button_pressed"]

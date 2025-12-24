@@ -131,7 +131,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack",
-"speed": 10.0
+"speed": 14.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -180,7 +180,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"move",
-"speed": 8.0
+"speed": 9.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_yya65"]
@@ -218,9 +218,8 @@ debug_color = Color(0, 0.647416, 0.21166, 0.42)
 position = Vector2(1, -16)
 scale = Vector2(1.17188, 1.17188)
 sprite_frames = SubResource("SpriteFrames_xdpts")
-animation = &"attack"
-frame = 8
-frame_progress = 1.0
+animation = &"move"
+frame_progress = 0.935429
 
 [node name="Hitbox" type="Area2D" parent="."]
 visible = false

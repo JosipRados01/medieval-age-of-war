@@ -16,26 +16,26 @@ var spawn_interval = 30
 
 # Wave mode configuration
 var wave_definitions = [
-	{"points": 200, "strategy": ""},     # Wave 1
-	{"points": 260, "strategy": ""},     # Wave 2
-	{"points": 325, "strategy": ""},     # Wave 3
-	{"points": 395, "strategy": ""},     # Wave 4
-	{"points": 470, "strategy": ""},     # Wave 5
-	{"points": 550, "strategy": ""},     # Wave 6
-	{"points": 635, "strategy": ""},     # Wave 7
-	{"points": 725, "strategy": ""},     # Wave 8
-	{"points": 820, "strategy": ""},     # Wave 9
-	{"points": 920, "strategy": ""},     # Wave 10
-	{"points": 1025, "strategy": ""},    # Wave 11
-	{"points": 1135, "strategy": ""},    # Wave 12
-	{"points": 1250, "strategy": ""},    # Wave 13
-	{"points": 1370, "strategy": ""},    # Wave 14
-	{"points": 1495, "strategy": ""},    # Wave 15
-	{"points": 1625, "strategy": ""},    # Wave 16
-	{"points": 1760, "strategy": ""},    # Wave 17
-	{"points": 1900, "strategy": ""},    # Wave 18
-	{"points": 1950, "strategy": ""},    # Wave 19
-	{"points": 2000, "strategy": ""},    # Wave 20
+	{"points": 200, "strategy": "panda_gnome"},     # Wave 1
+	{"points": 260, "strategy": "panda_gnome"},     # Wave 2
+	{"points": 325, "strategy": "spider_lizard"},   # Wave 3
+	{"points": 395, "strategy": "spider_lizard"},   # Wave 4
+	{"points": 470, "strategy": "spider_lizard"},   # Wave 5
+	{"points": 550, "strategy": "spider_lizard"},   # Wave 6
+	{"points": 635, "strategy": "bear_only"},       # Wave 7
+	{"points": 725, "strategy": ""},                # Wave 8
+	{"points": 820, "strategy": ""},                # Wave 9
+	{"points": 920, "strategy": ""},                # Wave 10
+	{"points": 1025, "strategy": ""},               # Wave 11
+	{"points": 1135, "strategy": ""},               # Wave 12
+	{"points": 1250, "strategy": "bear_only"},               # Wave 13
+	{"points": 1370, "strategy": "spider_lizard"},               # Wave 14
+	{"points": 1495, "strategy": "spider_lizard"},               # Wave 15
+	{"points": 1625, "strategy": "spider_lizard"},               # Wave 16
+	{"points": 1760, "strategy": "bear_only"},               # Wave 17
+	{"points": 1900, "strategy": ""},               # Wave 18
+	{"points": 1950, "strategy": ""},               # Wave 19
+	{"points": 2000, "strategy": "bear_only"},               # Wave 20
 ]
 
 @onready var clock_sound_timer: Timer = $clockSoundTimer
@@ -74,7 +74,7 @@ const units_enum = {
 
 const units_cost = {
 	"knight": 30,
-	"spearman": 50,
+	"spearman": 60,
 	"archer": 80,
 	"healer": 100,
 	"bear": 130,
@@ -247,16 +247,14 @@ func calculate_wave_mode_composition():
 		
 		# Check if wave has a specific strategy
 		if wave_def["strategy"] != "":
-			# Execute specific strategy if defined
+			# Execute specific wave mode strategy
 			match wave_def["strategy"]:
-				"balanced":
-					spawn_balanced_elite_army()
-				"archer_focus":
-					spawn_archer_focused_wave()
-				"knight_rush":
-					spawn_knight_focused_wave()
-				"spearman_swarm":
-					spawn_spearman_focused_wave()
+				"panda_gnome":
+					spawn_panda_gnome_wave()
+				"spider_lizard":
+					spawn_spider_lizard_wave()
+				"bear_only":
+					spawn_bear_only_wave()
 				_:
 					# Default to monster wave
 					spawn_monster_wave()
@@ -265,6 +263,10 @@ func calculate_wave_mode_composition():
 	# Use default monster wave strategy
 	spawn_monster_wave()
 
+
+# ============================================================================
+# CLASSIC MODE STRATEGIES (Knights, Archers, Spearmen, Healers)
+# ============================================================================
 
 func calculate_enemy_wave_composition():
 	var original_points = enemy_points
@@ -424,42 +426,85 @@ func cancel_unit():
 	if (player_spawn_queue.size() > 0 ):
 		var last_unit = player_spawn_queue.pop_back()
 		player_points += units_cost[last_unit]
+# ============================================================================
+# WAVE MODE STRATEGIES (Monsters: Bear, Panda, Gnome, Spider, Lizard)
+# ============================================================================
+
+func spawn_panda_gnome_wave():
+	# Waves 1-2: Only panda and gnome
+	# Split budget: 60% pandas, 40% gnomes
+	var panda_budget = int(enemy_points * 0.6)
+	
+	# Spawn pandas
+	while panda_budget >= units_cost.panda and enemy_points >= units_cost.panda:
+		enemy_points -= units_cost.panda
+		panda_budget -= units_cost.panda
+		enemy_spawn_queue.append(units_enum.panda)
+	
+	# Fill rest with gnomes
+	while enemy_points >= units_cost.gnome:
+		enemy_points -= units_cost.gnome
+		enemy_spawn_queue.append(units_enum.gnome)
+
+
+func spawn_spider_lizard_wave():
+	# Waves 3-6: Only spider and lizard
+	# Split budget: 60% lizards, 40% spiders
+	var lizard_budget = int(enemy_points * 0.6)
+	
+	# Spawn lizards first (higher cost, tankier)
+	while lizard_budget >= units_cost.lizard and enemy_points >= units_cost.lizard:
+		enemy_points -= units_cost.lizard
+		lizard_budget -= units_cost.lizard
+		enemy_spawn_queue.append(units_enum.lizard)
+	
+	# Fill rest with spiders
+	while enemy_points >= units_cost.spider:
+		enemy_points -= units_cost.spider
+		enemy_spawn_queue.append(units_enum.spider)
+
+
+func spawn_bear_only_wave():
+	# Wave 7: Only bears
+	while enemy_points >= units_cost.bear:
+		enemy_points -= units_cost.bear
+		enemy_spawn_queue.append(units_enum.bear)
 
 
 func spawn_monster_wave():
-	
-	##Debugging spiders
-	#while enemy_points >= enemy_units_cost.spider:
-		#enemy_points -= enemy_units_cost.spider
-		#enemy_spawn_queue.append(units_enum.spider)
-	
-	
+	# Default monster wave: Balanced mix of all creatures
+	# Composition: 20% bears, 30% lizards, 20% pandas, 10% gnomes, 20% spiders
 	var target_bears = max(1, int(enemy_points * 0.2 / units_cost.bear))
 	var target_lizards = max(1, int(enemy_points * 0.3 / units_cost.lizard))
 	var target_pandas = max(1, int(enemy_points * 0.2 / units_cost.panda))
 	var target_gnomes = max(1, int(enemy_points * 0.1 / units_cost.gnome))
 	var target_spiders = max(1, int(enemy_points * 0.2 / units_cost.spider))
 	
-	
+	# Spawn lizards first (highest priority)
 	for i in target_lizards:
 		if enemy_points >= units_cost.lizard:
 			enemy_points -= units_cost.lizard
 			enemy_spawn_queue.append(units_enum.lizard)
 
+	# Spawn bears
 	for i in target_bears:
 		if enemy_points >= units_cost.bear:
 			enemy_points -= units_cost.bear
 			enemy_spawn_queue.append(units_enum.bear)
 
+	# Spawn spiders
 	for i in target_spiders:
 		if enemy_points >= units_cost.spider:
 			enemy_points -= units_cost.spider
 			enemy_spawn_queue.append(units_enum.spider)
 	
+	# Spawn pandas
 	for i in target_pandas:
 		if enemy_points >= units_cost.panda:
 			enemy_points -= units_cost.panda
 			enemy_spawn_queue.append(units_enum.panda)
+	
+	# Spend the rest on gnomes
 	
 	#spend the rest on GNOOOOMES
 	while enemy_points >= units_cost.gnome:
