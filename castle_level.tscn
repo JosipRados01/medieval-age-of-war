@@ -1148,6 +1148,12 @@ rotation = 1.54699
 [node name="PlayLayer" type="Node2D" parent="."]
 y_sort_enabled = true
 
+[node name="Small tower building2" parent="PlayLayer" instance=ExtResource("14_1lw26")]
+position = Vector2(3313, -588)
+
+[node name="Big tower building2" parent="PlayLayer" instance=ExtResource("22_q41wq")]
+position = Vector2(2086, -331)
+
 [node name="PlayerBase" parent="PlayLayer" instance=ExtResource("12_djech")]
 position = Vector2(-31, -351)
 
