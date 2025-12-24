@@ -2,7 +2,7 @@ extends Node2D
 
 # Game mode
 enum GameMode { CLASSIC, WAVES }
-var current_game_mode: GameMode = GameMode.WAVES
+var current_game_mode: GameMode = GameMode.CLASSIC
 
 var enemy_spawn_queue = []
 var current_enemy_wave = []
@@ -10,7 +10,7 @@ var player_spawn_queue = []
 var current_player_wave = []
 var wave_counter := 0
 var enemy_points = 800
-var player_points = 1600
+var player_points = 600
 var spawn_timer = 0
 var spawn_interval = 30
 
@@ -101,6 +101,13 @@ const tower_cost = {
 func _ready() -> void:
 	Singleton.game = self
 	Singleton.update_points()
+	
+	# Set game mode based on scene name
+	var scene_name = get_tree().current_scene.name
+	if scene_name == "level1":
+		current_game_mode = GameMode.CLASSIC
+	elif scene_name == "level2":
+		current_game_mode = GameMode.WAVES
 	
 	# Connect base destroyed signals
 	if player_base:
@@ -261,11 +268,6 @@ func calculate_wave_mode_composition():
 
 func calculate_enemy_wave_composition():
 	var original_points = enemy_points
-	
-	## right now im making enemy monster units so im just spawning those
-	spawn_monster_wave()
-	return
-	
 	
 	# When under 500 points, 50% chance to wait and spawn nothing (only once at a time)
 	if enemy_points < 500 and randf() < 0.5:

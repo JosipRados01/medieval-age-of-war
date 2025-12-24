@@ -1086,7 +1086,7 @@ sources/2 = SubResource("TileSetAtlasSource_avnuw")
 sources/3 = SubResource("TileSetAtlasSource_esunb")
 sources/4 = SubResource("TileSetAtlasSource_rv4qa")
 
-[node name="Node2D" type="Node2D"]
+[node name="level2" type="Node2D"]
 script = ExtResource("1_odssq")
 
 [node name="ground" type="TileMapLayer" parent="."]

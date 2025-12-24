@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://x0wucte0qoxf"]
+[gd_scene load_steps=7 format=3 uid="uid://x0wucte0qoxf"]
 
 [ext_resource type="Script" uid="uid://dggxp8wylc1l" path="res://base.gd" id="1_8rhti"]
 [ext_resource type="Texture2D" uid="uid://dgkkh5lla6wfi" path="res://assets/Tiny Swords (Free Pack)/Buildings/Red Buildings/Castle.png" id="2_ohhpf"]
 [ext_resource type="Texture2D" uid="uid://detk478tog4si" path="res://assets/Tiny Swords (Free Pack)/Buildings/Blue Buildings/Castle.png" id="3_8rhti"]
+[ext_resource type="Texture2D" uid="uid://dvo36dqlbcwxx" path="res://assets/Buildings/Blue Buildings/Castle_Destroyed.png" id="4_ohhpf"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tpea4"]
 size = Vector2(109, 37)
@@ -24,6 +25,11 @@ texture = ExtResource("2_ohhpf")
 [node name="PlayerBase" type="Sprite2D" parent="."]
 position = Vector2(0, -100)
 texture = ExtResource("3_8rhti")
+
+[node name="CastleDestroyed" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(1, -100)
+texture = ExtResource("4_ohhpf")
 
 [node name="Hitbox" type="Area2D" parent="."]
 collision_layer = 2

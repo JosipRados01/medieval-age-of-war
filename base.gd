@@ -35,4 +35,6 @@ func take_damage(damage:int):
 
 func die():
 	base_destroyed.emit(team)
-	queue_free()
+	$EnemyBase.visible = false
+	$PlayerBase.visible = false
+	$CastleDestroyed.visible = true
