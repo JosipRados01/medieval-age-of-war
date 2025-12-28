@@ -13,6 +13,7 @@ var enemy_points = 800
 var player_points = 600
 var spawn_timer = 0
 var spawn_interval = 30
+var ability_mode = false
 
 # Wave mode configuration
 var wave_definitions = [
@@ -47,6 +48,7 @@ const ARCHER = preload("res://archer.tscn")
 const SPEARMAN = preload("res://spearman.tscn")
 const HEALER = preload("res://healer.tscn")
 const WIN_LOSE_SCREEN = preload("res://win_loose screen.tscn")
+const ABILITY_CURSOR = preload("res://ability_cursor.tscn")
 
 
 const BEAR = preload("res://bear.tscn")
@@ -101,6 +103,11 @@ const tower_cost = {
 func _ready() -> void:
 	Singleton.game = self
 	Singleton.update_points()
+	
+	# Initialize ability cursor
+	var cursor_instance = ABILITY_CURSOR.instantiate()
+	play_layer.add_child(cursor_instance)
+	Singleton.ability_cursor = cursor_instance
 	
 	# Set game mode based on scene name
 	var scene_name = get_tree().current_scene.name
@@ -546,6 +553,18 @@ func purchase_tower(tower_type: String) -> bool:
 		Singleton.update_points()
 		return true
 	return false
+
+func set_ability_mode(enabled: bool) -> void:
+	ability_mode = enabled
+
+func _input(event: InputEvent) -> void:
+	# Handle ability click FIRST - before anything else can consume the input
+	if ability_mode and event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			var click_position = get_global_mouse_position()
+			Singleton.trigger_ability_at_position(click_position)
+			get_viewport().set_input_as_handled()
+			return  # Early return to prevent other input processing
 
 func _on_base_destroyed(destroyed_team: String):
 	var win_lose_screen = WIN_LOSE_SCREEN.instantiate()

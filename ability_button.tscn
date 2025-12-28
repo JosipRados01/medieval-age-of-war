@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://cby7m4g8dwh5k"]
+
+[ext_resource type="Script" path="res://ability_button.gd" id="1_ability"]
+[ext_resource type="FontFile" uid="uid://bjbonoi056l65" path="res://assets/onciale-phf.regular.ttf" id="2_font"]
+
+[node name="AbilityButton" type="TextureButton"]
+custom_minimum_size = Vector2(200, 200)
+offset_right = 200.0
+offset_bottom = 200.0
+toggle_mode = true
+script = ExtResource("1_ability")
+
+[node name="CountdownLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 12
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 80
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]
