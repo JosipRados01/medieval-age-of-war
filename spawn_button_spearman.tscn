@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=3 uid="uid://bt83pj7p86g8o"]
+
+[ext_resource type="Script" path="res://spawn_button_spearman.gd" id="1_spearman"]
+[ext_resource type="FontFile" uid="uid://bjbonoi056l65" path="res://assets/onciale-phf.regular.ttf" id="2_font"]
+
+[node name="SpawnButtonSpearman" type="TextureButton"]
+custom_minimum_size = Vector2(200, 200)
+offset_right = 200.0
+offset_bottom = 200.0
+script = ExtResource("1_spearman")
+
+[node name="KeyLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 0
+anchor_top = 0.0
+anchor_bottom = 0.0
+offset_left = 30.0
+offset_top = 10.0
+offset_right = 80.0
+offset_bottom = 50.0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 30
+text = "J"
+
+[node name="PriceLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+offset_left = -80.0
+offset_top = 10.0
+offset_right = -30.0
+offset_bottom = 50.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 8
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 30
+text = "60"
+horizontal_alignment = 2
+
+[connection signal="pressed" from="." to="." method="_on_pressed"]

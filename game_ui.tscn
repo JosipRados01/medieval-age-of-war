@@ -1,8 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://bh31qvhyy6jq2"]
+[gd_scene load_steps=8 format=3 uid="uid://bh31qvhyy6jq2"]
 
 [ext_resource type="Texture2D" uid="uid://buy1up1jwubu6" path="res://assets/ui/points_background.png" id="1_3cv1o"]
 [ext_resource type="Script" uid="uid://03db71asnu36" path="res://game_ui.gd" id="1_3rlp6"]
 [ext_resource type="FontFile" uid="uid://bjbonoi056l65" path="res://assets/onciale-phf.regular.ttf" id="2_2ykv4"]
+[ext_resource type="PackedScene" uid="uid://bt83pj7p86g8o" path="res://spawn_button_spearman.tscn" id="4_spearman"]
+[ext_resource type="PackedScene" uid="uid://cxq0nfw8s1hcp" path="res://spawn_button_knight.tscn" id="5_knight"]
+[ext_resource type="PackedScene" uid="uid://cqjn38bkl6w5v" path="res://spawn_button_archer.tscn" id="6_archer"]
+[ext_resource type="PackedScene" uid="uid://dvb3jvgcwvwml" path="res://spawn_button_healer.tscn" id="7_healer"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_3rlp6")
@@ -58,6 +62,26 @@ theme_override_font_sizes/font_size = 75
 text = "1000 g"
 
 [node name="icons" type="FlowContainer" parent="Control/MarginContainer/Hbox/Vbox_left"]
+layout_mode = 2
+
+[node name="spacer" type="Control" parent="Control/MarginContainer/Hbox/Vbox_left"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ButtonContainer" type="HBoxContainer" parent="Control/MarginContainer/Hbox/Vbox_left"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="SpawnButtonSpearman" parent="Control/MarginContainer/Hbox/Vbox_left/ButtonContainer" instance=ExtResource("4_spearman")]
+layout_mode = 2
+
+[node name="SpawnButtonKnight" parent="Control/MarginContainer/Hbox/Vbox_left/ButtonContainer" instance=ExtResource("5_knight")]
+layout_mode = 2
+
+[node name="SpawnButtonArcher" parent="Control/MarginContainer/Hbox/Vbox_left/ButtonContainer" instance=ExtResource("6_archer")]
+layout_mode = 2
+
+[node name="SpawnButtonHealer" parent="Control/MarginContainer/Hbox/Vbox_left/ButtonContainer" instance=ExtResource("7_healer")]
 layout_mode = 2
 
 [node name="Vbox_right" type="VBoxContainer" parent="Control/MarginContainer/Hbox"]
