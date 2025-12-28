@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bh31qvhyy6jq2"]
+[gd_scene load_steps=9 format=3 uid="uid://bh31qvhyy6jq2"]
 
 [ext_resource type="Texture2D" uid="uid://buy1up1jwubu6" path="res://assets/ui/points_background.png" id="1_3cv1o"]
 [ext_resource type="Script" uid="uid://03db71asnu36" path="res://game_ui.gd" id="1_3rlp6"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://cxq0nfw8s1hcp" path="res://spawn_button_knight.tscn" id="5_knight"]
 [ext_resource type="PackedScene" uid="uid://cqjn38bkl6w5v" path="res://spawn_button_archer.tscn" id="6_archer"]
 [ext_resource type="PackedScene" uid="uid://dvb3jvgcwvwml" path="res://spawn_button_healer.tscn" id="7_healer"]
+[ext_resource type="PackedScene" uid="uid://dfnc23r0v5kg3" path="res://spawn_button_cancel.tscn" id="8_cancel"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_3rlp6")
@@ -82,6 +83,9 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="SpawnButtonHealer" parent="Control/MarginContainer/Hbox/Vbox_left/ButtonContainer" instance=ExtResource("7_healer")]
+layout_mode = 2
+
+[node name="SpawnButtonCancel" parent="Control/MarginContainer/Hbox/Vbox_left/ButtonContainer" instance=ExtResource("8_cancel")]
 layout_mode = 2
 
 [node name="Vbox_right" type="VBoxContainer" parent="Control/MarginContainer/Hbox"]
