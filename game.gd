@@ -82,7 +82,7 @@ const units_cost = {
 	"bear": 90,
 	"panda": 40,
 	"gnome": 20,
-	"spider": 30,
+	"spider": 40,
 	"lizard": 60
 }
 
