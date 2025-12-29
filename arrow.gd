@@ -42,6 +42,7 @@ func _physics_process(delta: float) -> void:
 		$HurtBox/CollisionShape2D.disabled = true
 		$ArrowStuck.visible = true
 		$Arrow.visible = false
+		$CPUParticles2D.emitting = false
 		# wait 5 seconds, then remove arrow
 		await get_tree().create_timer(5.0).timeout
 		queue_free()
