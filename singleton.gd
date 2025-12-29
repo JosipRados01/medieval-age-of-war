@@ -4,9 +4,11 @@ var game
 var game_ui
 var ability_cursor = null
 var active_ability_button = null
+var current_ability_type = ""
 
 const DEATH_SOUND = preload("res://death_sound.tscn")
 const ARROW = preload("res://arrow.tscn")
+const EXPLOSION = preload("res://explosion.tscn")
 
 func add_points(team:String, unit:String):
 	if(team == "player"):
@@ -33,9 +35,10 @@ func play_death_sound(position):
 	instance.play()
 
 # Ability system
-func ability_activated(ability_button):
+func ability_activated(ability_button, ability_type: String):
 	# Store reference to the button that activated the ability
 	active_ability_button = ability_button
+	current_ability_type = ability_type
 	
 	# Show the ability cursor
 	if ability_cursor:
@@ -55,6 +58,7 @@ func ability_cancelled():
 		game.set_ability_mode(false)
 	
 	active_ability_button = null
+	current_ability_type = ""
 
 func trigger_ability_at_position(position: Vector2):
 	# Hide the cursor
@@ -73,10 +77,15 @@ func trigger_ability_at_position(position: Vector2):
 		active_ability_button.use_ability()
 	
 	active_ability_button = null
+	current_ability_type = ""
 
 func execute_ability_effect(position: Vector2):
-	# Arrow rain ability: spawn 10 arrows from the sky in a 200px radius
-	spawn_arrow_rain(position, 10, 400.0)
+	if current_ability_type == "arrows":
+		# Arrow rain ability: spawn 10 arrows from the sky in a 400px radius
+		spawn_arrow_rain(position, 10, 400.0)
+	elif current_ability_type == "explosion":
+		# Explosion ability: spawn multiple explosions in the area
+		spawn_explosions(position, 8, 100.0)
 
 func spawn_arrow_rain(center_position: Vector2, arrow_count: int, radius: float):
 	# Spawn arrows with 0.1s delay between each
@@ -117,3 +126,27 @@ func spawn_arrow_from_sky(target_position: Vector2, spawn_offset: Vector2):
 	# Add to the game scene (let y-sorting handle rendering order naturally)
 	if game and game.play_layer:
 		game.play_layer.add_child(arrow)
+
+func spawn_explosions(center_position: Vector2, explosion_count: int, radius: float):
+	# Spawn explosions with 0.1s delay between each
+	for i in range(explosion_count):
+		# Calculate random position in the radius
+		var angle = randf() * TAU  # Random angle
+		var distance = randf_range(0, radius)  # Random distance from center
+		var offset = Vector2(cos(angle), sin(angle)) * distance
+		
+		var explosion_position = center_position + offset
+		
+		# Spawn explosion
+		var explosion = EXPLOSION.instantiate()
+		explosion.position = explosion_position
+		explosion.team = "player"  # Explosions are on the player's team
+		explosion.damage = 50  # Damage per explosion
+		
+		# Add to the game scene
+		if game and game.play_layer:
+			game.play_layer.add_child(explosion)
+		
+		# Wait 0.08 seconds before spawning the next explosion
+		if i < explosion_count - 1:
+			await get_tree().create_timer(0.08).timeout

@@ -2,17 +2,21 @@ extends TextureButton
 
 var ability_active = false
 var ability_cooldown = 0.0
-const ABILITY_DURATION = 5.0
-const ABILITY_TYPE = "arrows"
+const ABILITY_DURATION = 8.0
+const ABILITY_TYPE = "explosion"
 
 @onready var countdown_label: Label = $CountdownLabel
 
 func _ready() -> void:
-	# Set button textures - using the ability images provided
-	texture_normal = load("res://assets/ui/buttons/ability_arrows.png")
-	texture_pressed = load("res://assets/ui/buttons/ability_arrows_pressed.png")
+	# Set button textures - using the explosion ability image
+	var normal_texture = load("res://assets/ui/buttons/ability_explosion_regular.png")
+	var pressed_texture = load("res://assets/ui/buttons/ability_explosion_pressed.png")
+	texture_normal = normal_texture
+	texture_pressed = pressed_texture
+	texture_hover = normal_texture
 	stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	ignore_texture_size = true
+	custom_minimum_size = Vector2(200, 200)
 
 func _process(delta: float) -> void:
 	# Handle cooldown

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bh31qvhyy6jq2"]
+[gd_scene load_steps=11 format=3 uid="uid://bh31qvhyy6jq2"]
 
 [ext_resource type="Texture2D" uid="uid://buy1up1jwubu6" path="res://assets/ui/points_background.png" id="1_3cv1o"]
 [ext_resource type="Script" uid="uid://03db71asnu36" path="res://game_ui.gd" id="1_3rlp6"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://dvb3jvgcwvwml" path="res://spawn_button_healer.tscn" id="7_healer"]
 [ext_resource type="PackedScene" uid="uid://dfnc23r0v5kg3" path="res://spawn_button_cancel.tscn" id="8_cancel"]
 [ext_resource type="PackedScene" uid="uid://cby7m4g8dwh5k" path="res://ability_button.tscn" id="9_ability"]
+[ext_resource type="PackedScene" uid="uid://d2bqh8x3tn7gp" path="res://explosion_ability_button.tscn" id="10_explosion_ability"]
 
 [node name="CanvasLayer" type="CanvasLayer"]
 script = ExtResource("1_3rlp6")
@@ -121,8 +122,13 @@ horizontal_alignment = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="AbilityButtonContainer" type="CenterContainer" parent="Control/MarginContainer/Hbox/Vbox_right"]
+[node name="AbilityButtonContainer" type="HBoxContainer" parent="Control/MarginContainer/Hbox/Vbox_right"]
 layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
 
 [node name="AbilityButton" parent="Control/MarginContainer/Hbox/Vbox_right/AbilityButtonContainer" instance=ExtResource("9_ability")]
+layout_mode = 2
+
+[node name="ExplosionAbilityButton" parent="Control/MarginContainer/Hbox/Vbox_right/AbilityButtonContainer" instance=ExtResource("10_explosion_ability")]
 layout_mode = 2
