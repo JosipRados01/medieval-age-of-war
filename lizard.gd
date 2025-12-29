@@ -40,6 +40,10 @@ var is_knocked_back = false
 var knockback_velocity = Vector2.ZERO
 var knockback_duration = 0.0
 
+## hit flash
+var hit_flash = false
+var hit_flash_frames = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if team == "enemy":
@@ -52,6 +56,11 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	# handle hit flash countdown
+	if hit_flash_frames > 0:
+		hit_flash_frames -= 1
+		if hit_flash_frames == 0:
+			animated_sprite.modulate = Color(1.0, 1.0, 1.0)
 	
 	#always update attack timer
 	update_attack_timer()
@@ -201,6 +210,8 @@ func end_attack():
 func take_damage(damage:int):
 	health -= damage
 	_apply_knockback()
+	animated_sprite.modulate = Color(3.0, 3.0, 3.0)
+	hit_flash_frames = 5
 	
 	if(health <= 0):
 		die()
