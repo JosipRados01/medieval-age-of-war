@@ -2,7 +2,7 @@ extends TextureButton
 
 var ability_active = false
 var ability_cooldown = 0.0
-const ABILITY_DURATION = 10.0
+const ABILITY_DURATION = 15.0
 const ABILITY_TYPE = "arrows"
 
 @onready var countdown_label: Label = $CountdownLabel

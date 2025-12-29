@@ -247,10 +247,10 @@ func calculate_wave_mode_composition():
 	# Get the wave definition for the current wave
 	var wave_index = wave_counter - 1
 	
-	# If we've exceeded defined waves, cap at the last wave's points
+	# If we've exceeded defined waves, cap at the last wave's points halved
 	if wave_index >= wave_definitions.size():
-		# Cap at the final wave's points, don't scale further
-		enemy_points = wave_definitions[wave_definitions.size() - 1]["points"]
+		# Cap at the final wave's points halved, don't scale further
+		enemy_points = wave_definitions[wave_definitions.size() - 1]["points"] / 2
 	else:
 		var wave_def = wave_definitions[wave_index]
 		enemy_points = wave_def["points"]
