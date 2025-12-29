@@ -17,26 +17,26 @@ var ability_mode = false
 
 # Wave mode configuration
 var wave_definitions = [
-	{"points": 200, "strategy": "panda_gnome"},     # Wave 1
-	{"points": 260, "strategy": "panda_gnome"},     # Wave 2
-	{"points": 325, "strategy": "spider_lizard"},   # Wave 3
-	{"points": 395, "strategy": "spider_lizard"},   # Wave 4
-	{"points": 470, "strategy": "spider_lizard"},   # Wave 5
-	{"points": 550, "strategy": "spider_lizard"},   # Wave 6
-	{"points": 635, "strategy": "bear_only"},       # Wave 7
-	{"points": 725, "strategy": ""},                # Wave 8
-	{"points": 820, "strategy": ""},                # Wave 9
-	{"points": 920, "strategy": ""},                # Wave 10
-	{"points": 1025, "strategy": ""},               # Wave 11
-	{"points": 1135, "strategy": ""},               # Wave 12
-	{"points": 1250, "strategy": "bear_only"},               # Wave 13
-	{"points": 1370, "strategy": "spider_lizard"},               # Wave 14
-	{"points": 1495, "strategy": "spider_lizard"},               # Wave 15
-	{"points": 1625, "strategy": "spider_lizard"},               # Wave 16
-	{"points": 1760, "strategy": "bear_only"},               # Wave 17
-	{"points": 1900, "strategy": ""},               # Wave 18
-	{"points": 1950, "strategy": ""},               # Wave 19
-	{"points": 2000, "strategy": "bear_only"},               # Wave 20
+	{"points": 100, "strategy": "panda_gnome"},     # Wave 1
+	{"points": 130, "strategy": "panda_gnome"},     # Wave 2
+	{"points": 170, "strategy": "panda_gnome"},   # Wave 3
+	{"points": 200, "strategy": "spider_lizard"},   # Wave 4
+	{"points": 240, "strategy": "spider_lizard"},   # Wave 5
+	{"points": 280, "strategy": "spider_lizard"},   # Wave 6
+	{"points": 320, "strategy": "bear_only"},       # Wave 7
+	{"points": 370, "strategy": ""},                # Wave 8
+	{"points": 410, "strategy": ""},                # Wave 9
+	{"points": 460, "strategy": ""},                # Wave 10
+	{"points": 520, "strategy": ""},               # Wave 11
+	{"points": 570, "strategy": ""},               # Wave 12
+	{"points": 630, "strategy": "bear_only"},               # Wave 13
+	{"points": 690, "strategy": "spider_lizard"},               # Wave 14
+	{"points": 750, "strategy": "spider_lizard"},               # Wave 15
+	{"points": 820, "strategy": "spider_lizard"},               # Wave 16
+	{"points": 880, "strategy": "bear_only"},               # Wave 17
+	{"points": 950, "strategy": ""},               # Wave 18
+	{"points": 980, "strategy": ""},               # Wave 19
+	{"points": 1000, "strategy": "bear_only"},               # Wave 20
 ]
 
 @onready var clock_sound_timer: Timer = $clockSoundTimer
@@ -79,11 +79,11 @@ const units_cost = {
 	"spearman": 60,
 	"archer": 80,
 	"healer": 100,
-	"bear": 130,
-	"panda": 70,
-	"gnome": 30,
-	"spider": 40,
-	"lizard": 90
+	"bear": 90,
+	"panda": 40,
+	"gnome": 20,
+	"spider": 30,
+	"lizard": 60
 }
 
 const tower_cost = {
