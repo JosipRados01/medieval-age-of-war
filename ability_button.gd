@@ -2,7 +2,7 @@ extends TextureButton
 
 var ability_active = false
 var ability_cooldown = 0.0
-const ABILITY_DURATION = 5.0
+const ABILITY_DURATION = 10.0
 const ABILITY_TYPE = "arrows"
 
 @onready var countdown_label: Label = $CountdownLabel
@@ -15,6 +15,12 @@ func _ready() -> void:
 	ignore_texture_size = true
 
 func _process(delta: float) -> void:
+	# Disable button if abilities are not enabled in this game mode
+	if not Singleton.abilities_enabled:
+		disabled = true
+		modulate.a = 0.3
+		return
+	
 	# Handle cooldown
 	if ability_cooldown > 0:
 		ability_cooldown -= delta

@@ -122,6 +122,9 @@ func _ready() -> void:
 	if enemy_base:
 		enemy_base.base_destroyed.connect(_on_base_destroyed)
 	
+	# Set ability availability based on game mode
+	Singleton.abilities_enabled = (current_game_mode == GameMode.WAVES)
+	
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

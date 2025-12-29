@@ -5,6 +5,7 @@ var game_ui
 var ability_cursor = null
 var active_ability_button = null
 var current_ability_type = ""
+var abilities_enabled = true
 
 const DEATH_SOUND = preload("res://death_sound.tscn")
 const ARROW = preload("res://arrow.tscn")
