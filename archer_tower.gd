@@ -115,7 +115,7 @@ func shoot_arrow():
 	var start = $shootLocation.global_position
 	var end = target.global_position
 	#we assume the enemy will move a bit 
-	end.x -= 20
+	end.x -= 25
 	
 	turn_towards_enemy(end, animated_sprite)
 

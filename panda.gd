@@ -29,6 +29,11 @@ var side_offset := 0.0
 var target_offset := 0.0
 @onready var offset_change_time := 0.0
 
+## knockback variables
+var is_knocked_back = false
+var knockback_velocity = Vector2.ZERO
+var knockback_duration = 0.0
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	if team == "enemy":
@@ -44,6 +49,11 @@ func _process(delta: float) -> void:
 	
 	#always update attack timer
 	update_attack_timer()
+	
+	# handle knockback
+	if is_knocked_back:
+		_process_knockback(delta)
+		return
 	
 	is_combat_mode = check_combat_mode()
 	# The unit can either be in combat or moving
@@ -180,6 +190,7 @@ func end_attack():
 
 func take_damage(damage:int):
 	health -= damage
+	_apply_knockback()
 	
 	if(health <= 0):
 		die()
@@ -218,3 +229,21 @@ func _on_hurtbox_area_shape_entered(area_rid: RID, area: Area2D, area_shape_inde
 			var target_team = parent._get_team()
 			if(target_team != team and parent.has_method("take_damage")):
 				parent.take_damage(damage)
+
+func _apply_knockback():
+	var knockback_direction = -1 if team == "player" else 1
+	var knockback_strength = 60.0
+	var y_randomness = randf_range(-30, 30)
+	knockback_velocity = Vector2(knockback_direction * knockback_strength, y_randomness)
+	knockback_duration = 0.2
+	is_knocked_back = true
+
+func _process_knockback(delta):
+	knockback_duration -= delta
+	if knockback_duration <= 0:
+		is_knocked_back = false
+		knockback_velocity = Vector2.ZERO
+		return
+	
+	position += knockback_velocity * delta
+	knockback_velocity = knockback_velocity.lerp(Vector2.ZERO, 5.0 * delta)

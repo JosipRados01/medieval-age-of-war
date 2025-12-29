@@ -43,6 +43,11 @@ var poison_damage = 30
 var poison_ticks_remaining = 0
 var poison_timer = 0.0
 
+## knockback variables
+var is_knocked_back = false
+var knockback_velocity = Vector2.ZERO
+var knockback_duration = 0.0
+
 
 
 # Called when the node enters the scene tree for the first time.
@@ -74,6 +79,11 @@ func _process(delta: float) -> void:
 	# update poison timer if poisoned
 	if is_poisoned:
 		_update_poison(delta)
+	
+	# handle knockback
+	if is_knocked_back:
+		_process_knockback(delta)
+		return
 	
 	is_combat_mode = check_combat_mode()
 	# The unit can either be in combat or moving
@@ -228,6 +238,7 @@ func end_attack():
 
 func take_damage(damage:int):
 	health -= damage
+	_apply_knockback()
 	
 	if(health <= 0):
 		die()
@@ -307,3 +318,21 @@ func _update_poison(delta):
 			animated_sprite.modulate = Color(1.0, 1.0, 1.0)
 			# Restore movement speed
 			movement_speed *= 2.0
+
+func _apply_knockback():
+	var knockback_direction = -1 if team == "player" else 1
+	var knockback_strength = 60.0
+	var y_randomness = randf_range(-30, 30)
+	knockback_velocity = Vector2(knockback_direction * knockback_strength, y_randomness)
+	knockback_duration = 0.2
+	is_knocked_back = true
+
+func _process_knockback(delta):
+	knockback_duration -= delta
+	if knockback_duration <= 0:
+		is_knocked_back = false
+		knockback_velocity = Vector2.ZERO
+		return
+	
+	position += knockback_velocity * delta
+	knockback_velocity = knockback_velocity.lerp(Vector2.ZERO, 5.0 * delta)

@@ -130,7 +130,7 @@ func shoot_arrow(shoot_location: Marker2D, archer_sprite: AnimatedSprite2D):
 	var target = get_most_progressed_enemy(global_position, enemies)
 	var start = shoot_location.global_position
 	var end = target.global_position
-	end.x -= 20
+	end.x -= 25
 	
 	turn_towards_enemy(end, archer_sprite)
 
